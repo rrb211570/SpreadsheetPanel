@@ -1,5 +1,8 @@
-import {featureTurn} from './../../../tests/interactionTests.js'
-import {nextTurn} from './../../../tests/sequenceHelpers.js'
+import { store } from '../../../store/store.js';
+import { enableTest } from '../../../store/reducers/keyboardEventsSlice.js.js';
+import keyInputTest from '../handlers/keyboardEvents/test.js';
+import { featureTurn } from './../../../tests/interactionTests.js'
+import { nextTurn } from './../../../tests/sequenceHelpers.js'
 
 const t = {
     KEYINPUT: 'KEYINPUT'
@@ -17,7 +20,7 @@ function unitTest(testsToRun) {
     for (const test of testsToRun.values()) {
         switch (test) {
             case t.KEYINPUT:
-                this.keyInputTest(turn);
+                keyInputTest(turn);
                 break;
             default: break;
         }

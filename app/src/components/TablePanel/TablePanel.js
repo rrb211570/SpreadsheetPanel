@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { buildSheet } from './helpers/buildSheet.js'
+import buildSheet from './helpers/buildSheet.js'
 import { applyResizers } from './handlers/resizingHandler/resizingHandler.js'
 import applyTextChangeHandlers from './handlers/textChangeHandler/textChangeHandler.js';
 import applySelectionHandler from './handlers/selectionHandler.js';
-import { recordChange } from '../../data/modifiers/recordChange.js';
+import recordChange from '../../data/modifiers/recordChange.js';
 import { featureTurn, testSequence } from '../../tests/interactionTests.js';
 import unitTest from './tests/unitTest.js';
 import { useDispatch } from 'react-redux'
@@ -36,4 +36,4 @@ function TablePanel(props) {
         </div>
     );
 }
-export { TablePanel };
+export default TablePanel;

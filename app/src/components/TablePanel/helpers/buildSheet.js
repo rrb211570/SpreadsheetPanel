@@ -205,4 +205,4 @@ function showCoverEvent(e) {
     e.target.parentElement.querySelector('#cover').style.zIndex = 1;
 }
 
-export { buildSheet };
+export default buildSheet;

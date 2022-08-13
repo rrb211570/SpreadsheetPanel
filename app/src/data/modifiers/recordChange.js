@@ -47,4 +47,4 @@ function updatePrevRecordedData(dataBeforeChange, prevData) {
     return updatedPrevData;
 }
 
-export { recordChange, updateCollectedData };
+export default recordChange;

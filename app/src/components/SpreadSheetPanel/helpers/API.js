@@ -1,3 +1,4 @@
+import { store } from './../../../store/store.js'
 
 let loadSheetAPI = async (id, rootURL) => {
     const response = await fetch(rootURL + 'loadSheet/' + id, { credentials: 'include' });
@@ -9,7 +10,7 @@ let loadSheetAPI = async (id, rootURL) => {
     return body;
 }
 let saveAPI = async (id, rootURL) => {
-    let exposedCollectedData = exposeCollectedData(this.props.collectedData);
+    let exposedCollectedData = exposeCollectedData(store.getState().history.collectedData);
     const response = await fetch(rootURL + 'saveSheet/' + id, {
         method: 'POST',
         headers: {
@@ -53,4 +54,4 @@ function exposeCollectedData(data) {
     return { individualData: individualArr, groupData: groupArr };
 }
 
-export {loadSheetAPI, saveAPI};
+export { loadSheetAPI, saveAPI };

@@ -1,30 +1,27 @@
+import { store } from './../../../../store/store.js'
+import { trackEvent } from "../../../../store/reducers/keyboardEventsSlice.js";
+import {undo, redo} from './../../../../data/modifiers/undoRedo.js'
 
-
-const NOCOMMAND = 'NoCommand';
+const NO_COMMAND = 'No Command';
 const CONTROL = 'Control';
 const META = 'Meta'
 const SHIFT = 'Shift';
-const UNDO = 'Undo';
-const REDO = 'Redo';
+const NO_CHANGE = 'No Change';
 
 // Handle CTRL+Z/Y (undo/redo) and CTRL/SHIFT selections.
 function keyPressed(e) {
     console.log(e.key.padStart(7, ' ') + ' DOWN');
-    switch (this.state.keyEventState) {
-        case NOCOMMAND:
+    switch (store.getState().keyboardEvents.inputMode) {
+        case NO_COMMAND:
             if (e.key === CONTROL || e.key === META) {
-                this.setState({ keyEventState: CONTROL, keyOutcome: null });
+                store.dispatch(trackEvent({ inputMode: CONTROL, outcome: NO_CHANGE }))
             } else if (e.key === SHIFT) {
-                this.setState({ keyEventState: SHIFT, keyOutcome: null });
+                store.dispatch(trackEvent({ inputMode: SHIFT, outcome: NO_CHANGE }))
             }
             break;
         case CONTROL:
-            if (e.key === 'z') {
-                this.undo();
-            } else if (e.key === 'y') {
-                if (this.state.testingKeyInput) this.setState({ keyOutcome: REDO });
-                this.redo();
-            }
+            if (e.key === 'z') undo();
+            else if (e.key === 'y') redo();
             break;
         case SHIFT:
             break;
@@ -33,18 +30,18 @@ function keyPressed(e) {
 }
 function keyUpped(e) {
     console.log(e.key.padStart(7, ' ') + ' UP');
-    switch (this.state.keyEventState) {
-        case NOCOMMAND:
-            this.setState({ keyOutcome: null });
+    switch (store.getState().keyboardEvents.inputMode) {
+        case NO_COMMAND:
+            store.dispatch(trackEvent({ outcome: NO_CHANGE }))
             break;
         case CONTROL:
         case SHIFT:
             if (e.key === CONTROL || e.key === META || e.key === SHIFT) {
-                this.setState({ keyEventState: NOCOMMAND, keyOutcome: null });
-            } else this.setState({ keyOutcome: null });
+                store.dispatch(trackEvent({ inputMode: NO_COMMAND, outcome: NO_CHANGE }))
+            } else store.dispatch(trackEvent({ outcome: NO_CHANGE }))
             break;
         default:
-            this.setState({ keyEventState: NOCOMMAND, keyOutcome: null })
+            store.dispatch(trackEvent({ inputMode: NO_COMMAND, outcome: NO_CHANGE }))
             break;
     }
 }

@@ -43,7 +43,7 @@ const FLUFF_FULL = [FLUFF_DOWN, FLUFF_UP];
 
 const UNDO = 'Undo';
 const REDO = 'Redo';
-const NO_EVENT = 'No event';
+const NO_CHANGE = 'No Change'
 
 const WAIT_IN_QUEUE = -1;
 const ARRANGE_AND_ACTION = 0;
@@ -65,25 +65,28 @@ function keyInputTest(turn) {
     let j = 0;
     let timer;
     let stage = WAIT_IN_QUEUE;
-    let timeTravelCounter;
+    let recordedTimeTravelCounter;
     let dawdleCount = 0;
 
     timer = setInterval(() => {
         try {
+            let storeState = store.getState();
+            let currentTimeTravelCounter = storeState.keyboardEvents.timeTravelCounter;
+            let outcome = storeState.keyboardEvents.outcome;
             let key = events[i][j];
             switch (stage) {
                 case WAIT_IN_QUEUE: if (dawdleCount++ > 5) stage = ARRANGE_AND_ACTION;
                 case ARRANGE_AND_ACTION:
-                    timeTravelCounter = this.state.timeTravelCounter;
+                    recordedTimeTravelCounter = currentTimeTravelCounter;
                     predictedKeyOutcome = updateKeyState(keyState, key);
-                    if (predictedKeyOutcome != null) {
+                    if (predictedKeyOutcome != NO_CHANGE) {
                         predictedChange = capturePredictedChange(predictedKeyOutcome, timer);
-                    } else predictedChange = null;
+                    } else predictedChange = NO_CHANGE;
                     sheet.dispatchEvent(new KeyboardEvent(key.status == DOWN ? 'keydown' : 'keyup', { key: key.id, bubbles: true }));
                     stage = ASSERT;
                     break;
                 case ASSERT:
-                    if (predictionMatchesActualEvent(predictedKeyOutcome, this.state.keyOutcome, timeTravelCounter, this.state.timeTravelCounter, key, i, j)) {
+                    if (predictionMatchesActualEvent(predictedKeyOutcome, outcome, recordedTimeTravelCounter, currentTimeTravelCounter, key, i, j)) {
                         console.log('-------------- Event: ' + predictedKeyOutcome);
                         compareStoreAndDOM(predictedKeyOutcome, predictedChange);
                     }
@@ -130,20 +133,22 @@ function updateKeyState(keyState, key) {
         if (key.id == Z && (keyState.has(CONTROL) || keyState.has(META)) && !keyState.has(SHIFT)) return UNDO;
         else if (key.id == Y && (keyState.has(CONTROL) || keyState.has(META)) && !keyState.has(SHIFT)) return REDO;
     } else keyState.delete(key.id);
-    return null;
+    return NO_CHANGE;
 }
 
 function capturePredictedChange(predictedKeyOutcome) {
+    let storeState = store.getState();
+    let changeHistoryIndex = storeState.history.changeHistoryIndex;
+    let changeHistory = storeState.history.changeHistory;
     let delta;
     if (predictedKeyOutcome == UNDO) {
         delta = -1;
     } else if (predictedKeyOutcome == REDO) {
         delta = 1;
     } else throw 'capturePredictedChange(): currently unsupported outcome: ' + predictedKeyOutcome;
-    let history = store.getState().history;
-    let newIndex = history.changeHistoryIndex + delta;
-    if (newIndex < 0 || newIndex >= history.changeHistory.length) return NO_EVENT;
-    else return { predictedIndex: history.changeHistoryIndex + delta, predictedHistoryState: history.changeHistory[history.changeHistoryIndex + delta] };
+    let newIndex = changeHistoryIndex + delta;
+    if (newIndex < 0 || newIndex >= changeHistory.length) return NO_CHANGE;
+    else return { predictedIndex: changeHistoryIndex + delta, predictedHistoryState: changeHistory[changeHistoryIndex + delta] };
 }
 
 function predictionMatchesActualEvent(predictedKeyOutcome, currentKeyOutcome, previousTimeTravelCounter, currentTimeTravelCounter, key, i, j) {
@@ -153,8 +158,8 @@ function predictionMatchesActualEvent(predictedKeyOutcome, currentKeyOutcome, pr
 }
 
 function compareStoreAndDOM(predictedKeyOutcome, predictedChange) {
-    if (predictedChange == NO_EVENT) {
-        console.log('NO EVENT');
+    if (predictedChange == NO_CHANGE) {
+        console.log('NO CHANGE');
         return;
     }
     let changeHistoryIndex = store.getState().history.changeHistoryIndex;
@@ -286,4 +291,4 @@ function getIndicesOfNextEvent(i, j, events, turn, timer) {
     }
 }
 
-export { keyInputTest };
+export default keyInputTest;
