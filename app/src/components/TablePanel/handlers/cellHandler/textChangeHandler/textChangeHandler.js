@@ -1,13 +1,7 @@
-import Data from '../../../../data/data.js';
+import Data from '../../../../../data/data.js';
+import recordChange from '../../../../../data/modifiers/recordChange.js';
 
-function applyTextChangeHandlers(recordChange) {
-    let entryCells = [...document.querySelectorAll('.entryCell')];
-    entryCells.forEach(entryCell => {
-        applyTextChangeHandler(entryCell, recordChange);
-    });
-}
-
-function applyTextChangeHandler(entryCell, recordChange) {
+function applyTextChangeHandler(entryCell) {
     let changeOccurred = false;
     const input = entryCell.querySelector('input');
     const row = [...entryCell.classList].filter(name => /^row\d+$/.test(name))[0];
@@ -43,4 +37,4 @@ function applyTextChangeHandler(entryCell, recordChange) {
     input.addEventListener('focus', onFocusHandler);
 }
 
-export default applyTextChangeHandlers;
+export default applyTextChangeHandler;

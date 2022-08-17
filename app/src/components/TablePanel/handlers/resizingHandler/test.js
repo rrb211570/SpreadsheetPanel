@@ -280,4 +280,4 @@ function expectedChangeHistoryChanges(axisClass, delta, changeHistoryBeforeMove,
     }
 }
 
-export default resizersTests;
+export { resizersTests, checkReactionOfResizingOnTable };

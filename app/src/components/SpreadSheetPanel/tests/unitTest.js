@@ -1,6 +1,6 @@
 import { store } from '../../../store/store.js';
 import { enableTest } from '../../../store/reducers/keyboardEventsSlice.js.js';
-import keyInputTest from '../handlers/keyboardEvents/test.js';
+import { keyInputTest } from '../handlers/keyboardEvents/test.js';
 import { featureTurn } from './../../../tests/interactionTests.js'
 import { nextTurn } from './../../../tests/sequenceHelpers.js'
 

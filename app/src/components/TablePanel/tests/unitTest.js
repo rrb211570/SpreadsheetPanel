@@ -1,12 +1,14 @@
-import resizersTests from '../handlers/resizingHandler/test.js'
-import textChangeTest from '../handlers/textChangeHandler/test.js';
+import { resizersTests } from '../handlers/resizingHandler/test.js'
+import { textChangeTest } from '../handlers/cellHandler/textChangeHandler/test.js';
 import { featureTurn } from './../../../tests/interactionTests.js'
 import { nextTurn } from './../../../tests/sequenceHelpers.js'
+import { selectionTest } from '../handlers/cellHandler/selectionHandler/test.js';
 
 const t = {
     BUILDSHEET: 'BUILDSHEET',
-    RESIZING: 'RESIZING',
-    TEXTCHANGE: 'TEXTCHANGE'
+    SELECTION: 'SELECTION',
+    TEXTCHANGE: 'TEXTCHANGE',
+    RESIZING: 'RESIZING'
 };
 
 function unitTest(testsToRun) {
@@ -21,6 +23,9 @@ function unitTest(testsToRun) {
     for (const test of testsToRun.values()) {
         switch (test) {
             case t.BUILDSHEET: break;
+            case t.SELECTION:
+                selectionTest(turn);
+                break;
             case t.TEXTCHANGE:
                 textChangeTest(turn);
                 break;

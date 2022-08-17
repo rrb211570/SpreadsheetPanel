@@ -23,7 +23,7 @@ let buildSheet = (loadedSheet, rows, cols, defaultHeight, defaultWidth) => {
         let width = loadedIndividuals.length != 0 ? getWidth(loadedIndividuals[0][i + 2], defaultWidth) : defaultWidth;
         let marginLeft = loadedIndividuals.length != 0 ? getMarginLeft(loadedIndividuals[0][i + 2], defaultMarginLeft) :
             defaultMarginLeft;
-        topAxis.push(<div key={keyIndex++} className={`row0 col${i + 1} AxisX`} style={{ height: `${defaultHeight}px`, width: `${width}px`, marginLeft: `${marginLeft}px` }}><p style={{ margin: 0 }}>{letter}</p><div className='resizer-horizontal'></div></div>)
+        topAxis.push(<div key={keyIndex++} className={`row0 col${i + 1} AxisX`} style={{ height: `${defaultHeight-2}px`, width: `${width}px`, marginLeft: `${marginLeft}px`, lineHeight: `${defaultHeight-2}px`}}><p style={{ margin: 0 }}>{letter}</p><div className='resizer-horizontal'></div></div>)
     }
 
     let rowsArr = []; // Remaining Rows
@@ -45,8 +45,9 @@ let buildSheet = (loadedSheet, rows, cols, defaultHeight, defaultWidth) => {
                 defaultMarginLeft;
             row.push(
                 <div key={keyIndex++} className={`row${i + 1} col${j + 1} entryCell`} style={{ height: `${height}px`, width: `${width}px`, marginLeft: `${marginLeft}px` }}>
-                    <input onBlur={showCoverEvent} onKeyUp={stopPropagation} onKeyDown={stopPropagation} type='text' style={{ position: 'absolute', left: '1px', top: '0', height: `${height - 6}px`, width: `${width - 8}px`, border: 'none' }} defaultValue={val}></input>
-                    <div id='cover' tabIndex='-1' onMouseDown={(e) => selectCell(e, height, width)} onBlur={(e) => unselectCell(e, height, width)} onDoubleClickCapture={hideCoverEvent} style={{ position: 'absolute', zIndex: '1', left: '0', top: '0', height: `${height}px`, width: `${width}px`, border: 'none' }}></div>
+                    <input onKeyUp={stopPropagation} onKeyDown={stopPropagation} type='text' style={{ position: 'absolute', left: '2px', top: '1px', height: `${height - 6}px`, width: `${width - 8}px`, border: 'none' }} defaultValue={val}></input>
+                    <div className='selectionLayer' tabIndex='-1' style={{ position: 'absolute', zIndex: '2', left: '0', top: '0', height: `${height}px`, width: `${width}px`, border: 'none', opacity: 0.5 }}></div>
+                    <div className='highlightLayer' style={{ position: 'absolute', zIndex: '1', left: '0', top: '0', height: `${height - 4}px`, width: `${width - 4}px`, border: 'none' }}></div>
                 </div>);
         }
         rowsArr.push(row);
@@ -181,28 +182,6 @@ function getVal(obj) {
 
 function stopPropagation(e) {
     e.stopPropagation();
-}
-
-function selectCell(e, height, width) {
-    e.target.focus();
-    e.target.style.height = height - 4 + 'px';
-    e.target.style.width = width - 4 + 'px';
-    e.target.style.border = '1px solid blue';
-}
-
-function unselectCell(e, height, width) {
-    e.target.style.border = 'none';
-    e.target.style.height = height + 4 + 'px';
-    e.target.style.width = width + 4 + 'px';
-}
-
-function hideCoverEvent(e) {
-    e.target.style.zIndex = -1;
-    e.target.parentElement.querySelector('input').focus();
-}
-
-function showCoverEvent(e) {
-    e.target.parentElement.querySelector('#cover').style.zIndex = 1;
 }
 
 export default buildSheet;

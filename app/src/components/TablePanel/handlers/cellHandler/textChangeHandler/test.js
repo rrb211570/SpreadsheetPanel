@@ -1,5 +1,5 @@
-import { getInLine, nextTurn } from '../../../../tests/sequenceHelpers.js'
-import { store } from './../../../../store/store.js'
+import { getInLine, nextTurn } from '../../../../../tests/sequenceHelpers.js'
+import { store } from './../../../../../store/store.js'
 
 const WAIT_IN_QUEUE = -1;
 const ARRANGE_AND_ACTION = 0;
@@ -112,4 +112,4 @@ function compareStoreAndDOM(rowNum, colNum, cellInput, prevText, newText, prevSt
     if (cellOfCurrentState.getStyleMap().size != 0) throw 'compareStoreAndDOM(): unexpected styleEntry in current individualEntry';
 }
 
-export default textChangeTest;
+export { textChangeTest, checkReactionOfTextChange };

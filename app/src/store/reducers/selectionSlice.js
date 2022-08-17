@@ -5,9 +5,7 @@ export const selectionSlice = createSlice({
     initialState: { entries: [] },
     reducers: {
         setSelection(state, action) {
-            state = {
-                entries: action.entries
-            }
+            state.entries = new Set([...action.payload.newEntries]);
         }
     }
 })

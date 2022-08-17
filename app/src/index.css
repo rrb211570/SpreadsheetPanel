@@ -70,3 +70,7 @@ code {
   background-color:white;
   text-align: center;
 }
+
+.selectionLayer {
+  outline: none;
+}

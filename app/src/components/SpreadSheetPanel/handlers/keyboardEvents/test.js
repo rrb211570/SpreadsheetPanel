@@ -50,49 +50,59 @@ const ARRANGE_AND_ACTION = 0;
 const ASSERT = 1;
 
 function keyInputTest(turn) {
-    console.log('\n--------KEY INPUT TEST-----------------------');
-    getInLine(turn);
-
     let events = [UNDO_DISPATCH, UNDO_FINISH, UNDO_DISPATCH, UNDO_FINISH, REDO_DISPATCH, REDO_FINISH, REDO_DISPATCH, REDO_FINISH, REDO_DISPATCH, REDO_FINISH, FLUFF_FULL];
-
     if (validateSequence(events) == -1) return;
 
+    try {
+        let keyState = new Set();
+        for (let i = 0; i < events.length; ++i) {
+            for (let j = 0; j < events[i].length; ++j) {
+                if (i == 0 && j == 0) checkReactionOfKeyInput(events[i][j], keyState, turn, true);
+                else checkReactionOfKeyInput(events[i][j], keyState, turn);
+            }
+        }
+        concludeTest(turn);
+    } catch (e) {
+        console.log('Error: ' + e);
+    }
+}
+
+function checkReactionOfKeyInput(keyEvent, keyState, turn, isFirstCall) {
     let sheet = document.querySelector('#spreadsheet');
-    let keyState = new Set();
     let predictedKeyOutcome = null;
     let predictedChange = null;
-    let i = 0;
-    let j = 0;
-    let timer;
-    let stage = WAIT_IN_QUEUE;
     let recordedTimeTravelCounter;
-    let dawdleCount = 0;
+    let myTurnNumber = getInLine(turn);
+    let stage = WAIT_IN_QUEUE;
 
-    timer = setInterval(() => {
+    let timer = setInterval(() => {
         try {
             let storeState = store.getState();
             let currentTimeTravelCounter = storeState.keyboardEvents.timeTravelCounter;
             let outcome = storeState.keyboardEvents.outcome;
-            let key = events[i][j];
             switch (stage) {
-                case WAIT_IN_QUEUE: if (dawdleCount++ > 5) stage = ARRANGE_AND_ACTION;
+                case WAIT_IN_QUEUE:
+                    if (turn.current == myTurnNumber) {
+                        if (isFirstCall) console.log('\n--------KEY INPUT TEST--------------------');
+                        stage = ARRANGE_AND_ACTION;
+                    }
+                    break;
                 case ARRANGE_AND_ACTION:
                     recordedTimeTravelCounter = currentTimeTravelCounter;
-                    predictedKeyOutcome = updateKeyState(keyState, key);
+                    predictedKeyOutcome = updateKeyState(keyState, keyEvent);
                     if (predictedKeyOutcome != NO_CHANGE) {
                         predictedChange = capturePredictedChange(predictedKeyOutcome, timer);
                     } else predictedChange = NO_CHANGE;
-                    sheet.dispatchEvent(new KeyboardEvent(key.status == DOWN ? 'keydown' : 'keyup', { key: key.id, bubbles: true }));
+                    sheet.dispatchEvent(new KeyboardEvent(keyEvent.status == DOWN ? 'keydown' : 'keyup', { key: keyEvent.id, bubbles: true }));
                     stage = ASSERT;
                     break;
                 case ASSERT:
-                    if (predictionMatchesActualEvent(predictedKeyOutcome, outcome, recordedTimeTravelCounter, currentTimeTravelCounter, key, i, j)) {
+                    if (predictionMatchesActualEvent(predictedKeyOutcome, outcome, recordedTimeTravelCounter, currentTimeTravelCounter, keyEvent)) {
                         console.log('-------------- Event: ' + predictedKeyOutcome);
                         compareStoreAndDOM(predictedKeyOutcome, predictedChange);
                     }
-                    let newIndices = getIndicesOfNextEvent(i, j, events, turn, timer);
-                    if (newIndices != undefined) [i, j] = newIndices;
-                    stage = ARRANGE_AND_ACTION;
+                    nextTurn(turn);
+                    clearInterval(timer);
                     break;
                 default: break;
             }
@@ -151,8 +161,8 @@ function capturePredictedChange(predictedKeyOutcome) {
     else return { predictedIndex: changeHistoryIndex + delta, predictedHistoryState: changeHistory[changeHistoryIndex + delta] };
 }
 
-function predictionMatchesActualEvent(predictedKeyOutcome, currentKeyOutcome, previousTimeTravelCounter, currentTimeTravelCounter, key, i, j) {
-    if (currentKeyOutcome != predictedKeyOutcome) throw 'Error: keyInputTest(): key event outcome does not match prediction:\nkey: ' + key.id + ' ' + key.status + ' i: ' + i + ' j: ' + j + '\nPredicted: ' + predictedKeyOutcome + '\nActual: ' + currentKeyOutcome;
+function predictionMatchesActualEvent(predictedKeyOutcome, currentKeyOutcome, previousTimeTravelCounter, currentTimeTravelCounter, key) {
+    if (currentKeyOutcome != predictedKeyOutcome) throw 'Error: keyInputTest(): key event outcome does not match prediction:\nkey: ' + key.id + ' ' + key.status + '\nPredicted: ' + predictedKeyOutcome + '\nActual: ' + currentKeyOutcome;
     if (predictedKeyOutcome != null && previousTimeTravelCounter + 1 == currentTimeTravelCounter) return true;
     else return false;
 }
@@ -280,15 +290,15 @@ function compareGroup(group, styleMap) {
     }
 }
 
-function getIndicesOfNextEvent(i, j, events, turn, timer) {
-    if (j + 1 < events[i].length) return [i, ++j];
-    else if (i + 1 < events.length) {
-        return [++i, 0];
-    } else {
-        console.log('keyInputTest successful');
-        nextTurn(turn);
-        clearInterval(timer);
-    }
+function concludeTest(turn) {
+    let myTurnNumber = getInLine(turn);
+    let timer = setInterval(() => {
+        if (turn.current == myTurnNumber) {
+            console.log('Key Input Test successful');
+            nextTurn(turn);
+            clearInterval(timer);
+        }
+    }, 100);
 }
 
-export default keyInputTest;
+export { keyInputTest, checkReactionOfKeyInput };

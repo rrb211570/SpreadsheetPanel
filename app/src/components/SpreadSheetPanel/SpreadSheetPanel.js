@@ -25,7 +25,7 @@ class MainPanel extends React.Component {
             <div className="content" id="contentID" style={{ height: window.innerHeight * .95, width: '100%' }}>
                 {/*<FormatPanel />*/}
                 <div id='spreadsheet' tabIndex='-1' onKeyDown={keyPressed} onKeyUp={keyUpped}>
-                    <TablePanel loadedSheet={this.state.loadedSheet} rows={this.props.rows} cols={this.props.cols} rowHeight={this.props.rowHeight} colWidth={this.props.colWidth} testsToRun={this.props.whichTests.get('TablePanel')} />
+                    <TablePanel loadedSheet={this.state.loadedSheet} rows={this.props.rows} cols={this.props.cols} rowHeight={this.props.rowHeight} colWidth={this.props.colWidth}/>
                 </div>
             </div>
         );
@@ -101,8 +101,8 @@ class MainPanel extends React.Component {
 // ChartPanel: BAR, LINE, PIE, DOT
 //
 let whichTests = new Map([
-    ['TablePanel', new Set(['RESIZING', 'TEXTCHANGE'])],
-    ['SpreadSheetPanel', new Set(['KEYINPUT'])]
+    ['TablePanel', new Set(['SELECTION',/* 'TEXTCHANGE', 'RESIZING'*/])],
+    ['SpreadSheetPanel', new Set([/*'KEYINPUT'*/])]
 ]);
 sequenceTests(whichTests);
 const MainContainer = connect(mapStateToProps, mapDispatchToProps)(MainPanel);
@@ -115,7 +115,7 @@ function SpreadSheetPanel(defaultRows, defaultCols, defaultRowHeight, defaultCol
     return (
         <div>
             <Provider store={store}>
-                <MainContainer rows={defaultRows} cols={defaultCols} rowHeight={defaultRowHeight} colWidth={defaultColWidth} storageURL={storageURL} whichTests={whichTests} />
+                <MainContainer rows={defaultRows} cols={defaultCols} rowHeight={defaultRowHeight} colWidth={defaultColWidth} storageURL={storageURL}/>
             </Provider>
         </div>
     )

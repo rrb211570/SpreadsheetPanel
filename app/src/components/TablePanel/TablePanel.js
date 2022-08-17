@@ -1,26 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import buildSheet from './helpers/buildSheet.js'
 import { applyResizers } from './handlers/resizingHandler/resizingHandler.js'
-import applyTextChangeHandlers from './handlers/textChangeHandler/textChangeHandler.js';
-import applySelectionHandler from './handlers/selectionHandler.js';
-import recordChange from '../../data/modifiers/recordChange.js';
+import applyCellHandlers from './handlers/cellHandler/cellHandler.js';
 import { featureTurn, testSequence } from '../../tests/interactionTests.js';
 import unitTest from './tests/unitTest.js';
-import { useDispatch } from 'react-redux'
-import { setSelection } from './../../store/reducers/selectionSlice.js'
+
 
 function TablePanel(props) {
-    let { loadedSheet, rows, cols, rowHeight, colWidth, testsToRun } = props;
+    let { loadedSheet, rows, cols, rowHeight, colWidth } = props;
     const [table, setTable] = useState(buildSheet(loadedSheet, parseInt(rows), parseInt(cols), parseInt(rowHeight), parseInt(colWidth)));
 
-    let keyEventState;
-    let selected;
-    const dispatch = useDispatch()
-
     useEffect(() => {
-        applyResizers(recordChange); // resizers.js
-        applyTextChangeHandlers(recordChange);
-        applySelectionHandler(keyEventState, selected, dispatch, setSelection);
+        applyResizers(); // resizers.js
+        applyCellHandlers();
 
         let timer = setInterval(() => {
             if (featureTurn.current == testSequence.get('TablePanel').turnNumber) {

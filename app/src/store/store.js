@@ -80,7 +80,7 @@ const store = configureStore({
                 // Ignore these field paths in all actions
                 ignoredActionPaths: ['payload.prevRecordedData', 'payload.collectedData'],
                 // Ignore these paths in the state
-                ignoredPaths: ['history.changeHistory', 'history.collectedData', 'history.sentData'],
+                ignoredPaths: ['history.changeHistory', 'history.collectedData', 'history.sentData', 'selection.entries'],
             },
         })
 })

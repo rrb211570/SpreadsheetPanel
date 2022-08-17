@@ -5,7 +5,7 @@ import { SpreadSheetPanel } from './components'
 import reportWebVitals from './reportWebVitals';
 
 const DEFAULT_ROWS = 14;
-const DEFAULT_COLS = 12;
+const DEFAULT_COLS = 7;
 const DEFAULT_ROW_HEIGHT = 20;
 const DEFAULT_COL_WIDTH = 100;
 const STORAGE_URL = null;

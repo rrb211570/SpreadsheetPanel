@@ -1,26 +1,27 @@
 import Data from '../../../../data/data.js';
 import { hasClass } from '../../../../misc/util.js'
-import {store} from './../../../../store/store.js'
-import {setSheetDimensions} from './../../../../store/reducers/sheetDimensionsSlice.js'
+import recordChange from '../../../../data/modifiers/recordChange.js';
+import { store } from './../../../../store/store.js'
+import { setSheetDimensions } from './../../../../store/reducers/sheetDimensionsSlice.js'
 
-function applyResizers(recordChange) {
-    fixResizers('AxisX', recordChange);
-    fixResizers('AxisY', recordChange);
+function applyResizers() {
+    fixResizers('AxisX');
+    fixResizers('AxisY');
 }
 
-function fixResizers(axis, recordChange) {
+function fixResizers(axis) {
     let storeState = store.getState();
     let [tableHeight, tableWidth] = [storeState.sheetDimensions.tableHeight, storeState.sheetDimensions.tableWidth];
     const axisEntries = [...document.querySelectorAll('.' + axis)]
     axisEntries.forEach(axisCell => {
         let resizer = axisCell.querySelector('div');
         setResizerDimensions(resizer, tableHeight, tableWidth);
-        if (axis == 'AxisX') createResizableCol(axisCell, resizer, recordChange);
-        else createResizableRow(axisCell, resizer, recordChange)
+        if (axis == 'AxisX') createResizableCol(axisCell, resizer);
+        else createResizableRow(axisCell, resizer)
     });
 }
 
-function createResizableCol(axisCell, resizer, recordChange) {
+function createResizableCol(axisCell, resizer) {
     let x = 0;
     let w = 0;
     const colNum = parseInt([...axisCell.classList].filter(name => /^col\d+$/.test(name))[0].match(/(\d+)/)[0], 10);
@@ -33,6 +34,7 @@ function createResizableCol(axisCell, resizer, recordChange) {
     const mouseDownHandler = function (e) {
         let sheetDimensions = store.getState().sheetDimensions;
         [initialTableHeight, initialTableWidth] = [sheetDimensions.tableHeight, sheetDimensions.tableWidth];
+        document.querySelector(`.AxisX.col${colNum} > .resizer-horizontal`).style.height = `${initialTableHeight}px`;
         x = e.clientX;
         w = parseInt(window.getComputedStyle(axisCell).width, 10);
         dataBeforeChange = getResizableColData(colNum, w, initialTableWidth); // store current state
@@ -49,14 +51,14 @@ function createResizableCol(axisCell, resizer, recordChange) {
         updateWidths(colNum, w, dx);
         updateColMargins(colNum + 1, colMarginsLeft, dx);
         let newTableWidth = initialTableWidth + dx;
-        document.querySelectorAll('.resizer-vertical').forEach(resizerDiv => resizerDiv.style.width = `${newTableWidth}px`);
-        store.dispatch(setSheetDimensions({tableHeight: initialTableHeight, tableWidth: newTableWidth}));
+        store.dispatch(setSheetDimensions({ tableHeight: initialTableHeight, tableWidth: newTableWidth }));
     };
 
     const mouseUpHandler = function () {
         document.removeEventListener('mousemove', mouseMoveHandler);
         document.removeEventListener('mouseup', mouseUpHandler);
         resizer.classList.remove('resizing-horizontal');
+        resizer.style.height = document.querySelector('.AxisX').style.height;
         if (changeOccurred) {
             let newWidth = parseInt(axisCell.style.width, 10);
             dataAfterChange = getResizableColData(colNum, newWidth, store.getState().sheetDimensions.tableWidth)
@@ -69,7 +71,7 @@ function createResizableCol(axisCell, resizer, recordChange) {
     resizer.addEventListener('mousedown', mouseDownHandler);
 }
 
-function createResizableRow(axisCell, resizer, recordChange) {
+function createResizableRow(axisCell, resizer) {
     let y = 0;
     let h = 0;
     const rowNum = parseInt([...axisCell.classList].filter(name => /^row\d+$/.test(name))[0].match(/(\d+)/)[0], 10);
@@ -81,6 +83,7 @@ function createResizableRow(axisCell, resizer, recordChange) {
     const mouseDownHandler = function (e) {
         let sheetDimensions = store.getState().sheetDimensions;
         [initialTableHeight, initialTableWidth] = [sheetDimensions.tableHeight, sheetDimensions.tableWidth];
+        document.querySelector(`.AxisY.row${rowNum} > .resizer-vertical`).style.width = `${initialTableWidth}px`;
         y = e.clientY;
         h = parseInt(window.getComputedStyle(axisCell).height, 10);
         dataBeforeChange = getResizableRowData(rowNum, h, initialTableHeight); // store current state
@@ -95,14 +98,14 @@ function createResizableRow(axisCell, resizer, recordChange) {
         const dy = h + e.clientY - y < 0 ? -h + 1 : e.clientY - y; // set dy so as to maintain 1 pixel minimum height
         updateHeights(rowNum, h, dy);
         let newTableHeight = initialTableHeight + dy;
-        document.querySelectorAll('.resizer-horizontal').forEach(resizerDiv => resizerDiv.style.height = `${newTableHeight}px`);
-        store.dispatch(setSheetDimensions({tableHeight: newTableHeight, tableWidth: initialTableWidth}));
+        store.dispatch(setSheetDimensions({ tableHeight: newTableHeight, tableWidth: initialTableWidth }));
     };
 
     const mouseUpHandler = function () {
         document.removeEventListener('mousemove', mouseMoveHandler);
         document.removeEventListener('mouseup', mouseUpHandler);
         resizer.classList.remove('resizing-vertical');
+        resizer.style.width = document.querySelector('.AxisY').style.width;
         if (changeOccurred) {
             let newHeight = parseInt(axisCell.style.height, 10);
             dataAfterChange = getResizableRowData(rowNum, newHeight, store.getState().sheetDimensions.tableHeight);
@@ -156,8 +159,9 @@ function updateHeights(rowIndex, height, dy) {
     arr[1].style.lineHeight = height + dy + 'px';
     arr.forEach((cell, index) => {
         if (index > 1) {
-            cell.querySelector('input').style.height = height + dy - 4 + 'px';
-            cell.querySelector('#cover').style.height = height + dy + 'px';
+            cell.querySelector('input').style.height = height + dy - 6 + 'px';
+            cell.querySelector('.selectionLayer').style.height = height + dy + 'px';
+            cell.querySelector('.highlightLayer').style.height = height + dy - 4 + 'px';
         }
         cell.style.height = height + dy + 'px';
     });
@@ -168,8 +172,9 @@ function updateWidths(colIndex, width, dx) {
     arr.forEach((cell, index) => {
         cell.style.width = width + dx + 'px';
         if (index > 0) {
-            cell.querySelector('input').style.width = width + dx - 4 + 'px';
-            cell.querySelector('#cover').style.width = width + dx + 'px';
+            cell.querySelector('input').style.width = width + dx - 8 + 'px';
+            cell.querySelector('.selectionLayer').style.width = width + dx + 'px';
+            cell.querySelector('.highlightLayer').style.width = width + dx - 4 + 'px';
         }
     });
 }
