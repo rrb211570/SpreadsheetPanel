@@ -1,7 +1,9 @@
 import React from 'react';
 import { Provider, connect } from 'react-redux'
-import { featureTurn, sequenceTests, testSequence } from '../../tests/interactionTests.js';
+import { batchTurn, sequenceTests, testSequence } from '../../tests/sequenceHelpers.js';
+
 import unitTest from './tests/unitTest.js';
+import appTest from './tests/appTest.js';
 import { loadSheetAPI, saveAPI } from './helpers/API.js';
 import { keyPressed, keyUpped } from './handlers/keyboardEvents/keyboardEvents.js';
 import TablePanel from '../TablePanel/TablePanel.js'
@@ -25,7 +27,7 @@ class MainPanel extends React.Component {
             <div className="content" id="contentID" style={{ height: window.innerHeight * .95, width: '100%' }}>
                 {/*<FormatPanel />*/}
                 <div id='spreadsheet' tabIndex='-1' onKeyDown={keyPressed} onKeyUp={keyUpped}>
-                    <TablePanel loadedSheet={this.state.loadedSheet} rows={this.props.rows} cols={this.props.cols} rowHeight={this.props.rowHeight} colWidth={this.props.colWidth}/>
+                    <TablePanel loadedSheet={this.state.loadedSheet} rows={this.props.rows} cols={this.props.cols} rowHeight={this.props.rowHeight} colWidth={this.props.colWidth} />
                 </div>
             </div>
         );
@@ -58,11 +60,18 @@ class MainPanel extends React.Component {
                 });
         }
         let timer = setInterval(() => {
-            if (featureTurn.current == testSequence.get('SpreadSheetPanel').turnNumber) {
+            if (batchTurn.current == testSequence.get('SpreadSheetPanel').turnNumber) {
                 unitTest(testSequence.get('SpreadSheetPanel').tests);
                 clearInterval(timer);
             }
+
         }, 500);
+        let timer2 = setInterval(() => {
+            if (batchTurn.current == testSequence.get('App').turnNumber) {
+                appTest(testSequence.get('App').tests);
+                clearInterval(timer2);
+            }
+        })
 
     }
     shouldComponentUpdate() { // prevent unnecessary re-renders on changes to Redux store
@@ -101,8 +110,9 @@ class MainPanel extends React.Component {
 // ChartPanel: BAR, LINE, PIE, DOT
 //
 let whichTests = new Map([
-    ['TablePanel', new Set(['SELECTION',/* 'TEXTCHANGE', 'RESIZING'*/])],
-    ['SpreadSheetPanel', new Set([/*'KEYINPUT'*/])]
+    ['TablePanel', new Set([/*'SELECTION', 'TEXTCHANGE', 'RESIZING'*/])],
+    ['SpreadSheetPanel', new Set([/*'KEYINPUT'*/])],
+    ['App', new Set(['ENDTOEND'])]
 ]);
 sequenceTests(whichTests);
 const MainContainer = connect(mapStateToProps, mapDispatchToProps)(MainPanel);
@@ -115,7 +125,7 @@ function SpreadSheetPanel(defaultRows, defaultCols, defaultRowHeight, defaultCol
     return (
         <div>
             <Provider store={store}>
-                <MainContainer rows={defaultRows} cols={defaultCols} rowHeight={defaultRowHeight} colWidth={defaultColWidth} storageURL={storageURL}/>
+                <MainContainer rows={defaultRows} cols={defaultCols} rowHeight={defaultRowHeight} colWidth={defaultColWidth} storageURL={storageURL} />
             </Provider>
         </div>
     )

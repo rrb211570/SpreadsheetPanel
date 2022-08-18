@@ -1,12 +1,12 @@
-import { keyInputTest } from '../handlers/keyboardEvents/test.js';
+import endToEnd from './../../../tests/endToEnd.js'
 
 import { batchTurn , nextTurn, concludeTestingBatch } from './../../../tests/sequenceHelpers.js'
 
 const t = {
-    KEYINPUT: 'KEYINPUT'
+    ENDTOEND: 'ENDTOEND'
 };
 
-function unitTest(testsToRun) {
+function appTest(testsToRun) {
     if (testsToRun.size == 0) {
         nextTurn(batchTurn);
         return;
@@ -17,8 +17,8 @@ function unitTest(testsToRun) {
     };
     for (const test of testsToRun.values()) {
         switch (test) {
-            case t.KEYINPUT:
-                keyInputTest(atomicTurn);
+            case t.ENDTOEND:
+                endToEnd(atomicTurn);
                 break;
             default: break;
         }
@@ -26,4 +26,4 @@ function unitTest(testsToRun) {
     concludeTestingBatch(atomicTurn, batchTurn);
 }
 
-export default unitTest;
+export default appTest;

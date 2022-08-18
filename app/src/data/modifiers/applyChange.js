@@ -1,5 +1,5 @@
 import { store } from './../../store/store.js'
-import {setSheetDimensions} from './../../store/reducers/sheetDimensionsSlice.js'
+import { setSheetDimensions } from './../../store/reducers/sheetDimensionsSlice.js'
 
 function updateSheetDimensions(styleMap) {
     let h = null;
@@ -14,7 +14,7 @@ function updateSheetDimensions(styleMap) {
     document.getElementById('spreadsheet').querySelectorAll('.resizer-vertical').forEach(resizer => {
         if (w != null) resizer.style.width = w + 'px';
     });
-    store.dispatch(setSheetDimensions({tableHeight: h, tableWidth: w}));
+    store.dispatch(setSheetDimensions({ tableHeight: h, tableWidth: w }));
 }
 
 function applyChange(entry, styleMap, val) {
@@ -55,8 +55,12 @@ function applyGroupChange(group, styleMap) {
             if (property == 'width') {
                 let entries = document.querySelectorAll(group);
                 let dx = value - parseInt(entries[0].style.width, 10);
-                for (let i = 0; i < entries.length; ++i) {
+                entries[0].style.width = value + 'px';
+                for (let i = 1; i < entries.length; ++i) {
                     entries[i].style.width = value + 'px';
+                    entries[i].querySelector('input').style.width = value - 8 + 'px';
+                    entries[i].querySelector('.selectionLayer').style.width = value + 'px';
+                    entries[i].querySelector('.highlightLayer').style.width = value - 4 + 'px';
                 }
                 let colNum = parseInt(group.match(/(\d+)/)[0], 10);
                 let elem = null;
@@ -77,8 +81,9 @@ function applyGroupChange(group, styleMap) {
                 entries[1].style.lineHeight = value + 'px';
                 for (let i = 2; i < entries.length; ++i) {
                     entries[i].style.height = value + 'px';
-                    entries[i].querySelector('input').style.height = value + 'px';
-                    entries[i].querySelector('#cover').style.height = value + 'px';
+                    entries[i].querySelector('input').style.height = value - 6 + 'px';
+                    entries[i].querySelector('.selectionLayer').style.height = value + 'px';
+                    entries[i].querySelector('.highlightLayer').style.height = value - 4 + 'px';
                 }
             }
         }

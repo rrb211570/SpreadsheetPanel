@@ -1,46 +1,6 @@
 import { store } from '../../../../store/store.js'
 import { getInLine, nextTurn } from '../../../../tests/sequenceHelpers.js'
-
-const DOWN = 'DOWN';
-const UP = 'UP';
-
-const CONTROL = 'Control';
-const META = 'Meta';
-const SHIFT = 'Shift';
-const Z = 'z';
-const Y = 'y';
-const C = 'c';
-const X = 'x';
-const V = 'v';
-const FLUFF = 'q';
-
-const CTRL_DOWN = { id: CONTROL, status: DOWN };
-const CTRL_UP = { id: CONTROL, status: UP };
-const META_DOWN = { id: META, status: DOWN };
-const META_UP = { id: META, status: UP };
-const SHIFT_DOWN = { id: SHIFT, status: DOWN };
-const SHIFT_UP = { id: SHIFT, status: UP };
-const Z_DOWN = { id: Z, status: DOWN };
-const Z_UP = { id: Z, status: UP };
-const Y_DOWN = { id: Y, status: DOWN };
-const Y_UP = { id: Y, status: UP };
-const X_DOWN = { id: X, status: DOWN };
-const X_UP = { id: X, status: UP };
-const C_DOWN = { id: C, status: DOWN };
-const C_UP = { id: C, status: UP };
-const V_DOWN = { id: V, status: DOWN };
-const V_UP = { id: V, status: UP };
-const FLUFF_DOWN = { id: FLUFF, status: DOWN };
-const FLUFF_UP = { id: FLUFF, status: UP };
-
-const UNDO_DISPATCH = [CTRL_DOWN, Z_DOWN];
-const UNDO_FINISH = [Z_UP, CTRL_UP];
-const REDO_DISPATCH = [CTRL_DOWN, Y_DOWN];
-const REDO_FINISH = [Y_UP, CTRL_UP];
-const SIX_FINGERED_HAND = [CTRL_DOWN, SHIFT_DOWN, Z_DOWN, X_DOWN, C_DOWN, V_DOWN];
-const SIX_FINGERED_HAND_FINISH = [CTRL_UP, SHIFT_UP, Z_UP, X_UP, C_UP, V_UP];
-const FLUFF_FULL = [FLUFF_DOWN, FLUFF_UP];
-
+import { DOWN, CONTROL, META, SHIFT, Z, Y, UNDO_DISPATCH, UNDO_FINISH, REDO_DISPATCH, REDO_FINISH, FLUFF_FULL } from './keyMacros.js'
 const UNDO = 'Undo';
 const REDO = 'Redo';
 const NO_CHANGE = 'No Change'
@@ -49,7 +9,7 @@ const WAIT_IN_QUEUE = -1;
 const ARRANGE_AND_ACTION = 0;
 const ASSERT = 1;
 
-function keyInputTest(turn) {
+function keyInputTest(atomicTurn) {
     let events = [UNDO_DISPATCH, UNDO_FINISH, UNDO_DISPATCH, UNDO_FINISH, REDO_DISPATCH, REDO_FINISH, REDO_DISPATCH, REDO_FINISH, REDO_DISPATCH, REDO_FINISH, FLUFF_FULL];
     if (validateSequence(events) == -1) return;
 
@@ -57,22 +17,21 @@ function keyInputTest(turn) {
         let keyState = new Set();
         for (let i = 0; i < events.length; ++i) {
             for (let j = 0; j < events[i].length; ++j) {
-                if (i == 0 && j == 0) checkReactionOfKeyInput(events[i][j], keyState, turn, true);
-                else checkReactionOfKeyInput(events[i][j], keyState, turn);
+                if (i == 0 && j == 0) checkReactionOfKeyInput(events[i][j], keyState, atomicTurn, true);
+                else checkReactionOfKeyInput(events[i][j], keyState, atomicTurn);
             }
         }
-        concludeTest(turn);
     } catch (e) {
         console.log('Error: ' + e);
     }
 }
 
-function checkReactionOfKeyInput(keyEvent, keyState, turn, isFirstCall) {
+function checkReactionOfKeyInput(keyEvent, keyState, atomicTurn, isFirstCall) {
     let sheet = document.querySelector('#spreadsheet');
     let predictedKeyOutcome = null;
     let predictedChange = null;
     let recordedTimeTravelCounter;
-    let myTurnNumber = getInLine(turn);
+    let myTurnNumber = getInLine(atomicTurn);
     let stage = WAIT_IN_QUEUE;
 
     let timer = setInterval(() => {
@@ -82,7 +41,7 @@ function checkReactionOfKeyInput(keyEvent, keyState, turn, isFirstCall) {
             let outcome = storeState.keyboardEvents.outcome;
             switch (stage) {
                 case WAIT_IN_QUEUE:
-                    if (turn.current == myTurnNumber) {
+                    if (atomicTurn.current == myTurnNumber) {
                         if (isFirstCall) console.log('\n--------KEY INPUT TEST--------------------');
                         stage = ARRANGE_AND_ACTION;
                     }
@@ -101,13 +60,14 @@ function checkReactionOfKeyInput(keyEvent, keyState, turn, isFirstCall) {
                         console.log('-------------- Event: ' + predictedKeyOutcome);
                         compareStoreAndDOM(predictedKeyOutcome, predictedChange);
                     }
-                    nextTurn(turn);
+                    nextTurn(atomicTurn);
                     clearInterval(timer);
                     break;
                 default: break;
             }
         } catch (e) {
             console.log('Error: ' + e);
+            nextTurn(atomicTurn);
             clearInterval(timer);
         }
     }, 100);
@@ -255,8 +215,12 @@ function compareGroup(group, styleMap) {
             if (property == 'width') {
                 let entries = document.querySelectorAll(group);
                 let dx = value - parseInt(entries[0].style.width, 10);
-                for (let i = 0; i < entries.length; ++i) {
+                if (entries[0].style.width != value + 'px') throw 'compareGroup() failed on width';
+                for (let i = 1; i < entries.length; ++i) {
                     if (entries[i].style.width != value + 'px') throw 'compareGroup() failed on width';
+                    if (entries[i].querySelector('input').style.width != value - 8 + 'px') throw 'compareGroup() failed on inputWidth';
+                    if (entries[i].querySelector('.selectionLayer').style.width != value + 'px') throw 'compareGroup() failed on selectionWidth';
+                    if (entries[i].querySelector('.highlightLayer').style.width != value - 4 + 'px') throw 'compareGroup() failed on highlightWidth';
                 }
                 let colNum = parseInt(group.match(/(\d+)/)[0], 10); // check that cells do not overlap
                 let elem = null;
@@ -282,23 +246,13 @@ function compareGroup(group, styleMap) {
                 entries[1].style.lineHeight = value + 'px';
                 for (let i = 2; i < entries.length; ++i) {
                     if (entries[i].style.height != value + 'px') throw 'compareGroup() failed on height';
-                    if (entries[i].querySelector('input').style.height != value + 'px') throw 'compareGroup() failed on inputHeight';
-                    if (entries[i].querySelector('#cover').style.height != value + 'px') throw 'compareGroup() failed on coverHeight';
+                    if (entries[i].querySelector('input').style.height != value - 6 + 'px') throw 'compareGroup() failed on inputHeight';
+                    if (entries[i].querySelector('.selectionLayer').style.height != value + 'px') throw 'compareGroup() failed on selectionHeight';
+                    if (entries[i].querySelector('.highlightLayer').style.height != value - 4 + 'px') throw 'compareGroup() failed on highlightHeight';
                 }
             }
         }
     }
 }
 
-function concludeTest(turn) {
-    let myTurnNumber = getInLine(turn);
-    let timer = setInterval(() => {
-        if (turn.current == myTurnNumber) {
-            console.log('Key Input Test successful');
-            nextTurn(turn);
-            clearInterval(timer);
-        }
-    }, 100);
-}
-
-export { keyInputTest, checkReactionOfKeyInput };
+export { keyInputTest, checkReactionOfKeyInput, validateSequence };

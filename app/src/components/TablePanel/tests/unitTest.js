@@ -1,8 +1,8 @@
 import { resizersTests } from '../handlers/resizingHandler/test.js'
-import { textChangeTest } from '../handlers/cellHandler/textChangeHandler/test.js';
-import { featureTurn } from './../../../tests/interactionTests.js'
-import { nextTurn } from './../../../tests/sequenceHelpers.js'
 import { selectionTest } from '../handlers/cellHandler/selectionHandler/test.js';
+import { textChangeTest } from '../handlers/cellHandler/textChangeHandler/test.js';
+
+import { batchTurn, nextTurn, concludeTestingBatch} from './../../../tests/sequenceHelpers.js'
 
 const t = {
     BUILDSHEET: 'BUILDSHEET',
@@ -13,10 +13,10 @@ const t = {
 
 function unitTest(testsToRun) {
     if (testsToRun.size == 0) {
-        nextTurn(featureTurn);
+        nextTurn(batchTurn);
         return;
     }
-    let turn = {
+    let atomicTurn = {
         current: 1,
         nextAvailable: 1
     };
@@ -24,23 +24,20 @@ function unitTest(testsToRun) {
         switch (test) {
             case t.BUILDSHEET: break;
             case t.SELECTION:
-                selectionTest(turn);
+                selectionTest(atomicTurn);
                 break;
             case t.TEXTCHANGE:
-                textChangeTest(turn);
+                textChangeTest(atomicTurn);
                 break;
             case t.RESIZING:
-                resizersTests(turn);
+                resizersTests(atomicTurn);
                 break;
             default: break;
         }
     }
-    let timer = setInterval(() => {
-        if (turn.current == turn.nextAvailable) {
-            nextTurn(featureTurn);
-            clearInterval(timer);
-        }
-    }, 100);
+    concludeTestingBatch(atomicTurn, batchTurn);
 }
+
+
 
 export default unitTest;

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import buildSheet from './helpers/buildSheet.js'
 import { applyResizers } from './handlers/resizingHandler/resizingHandler.js'
 import applyCellHandlers from './handlers/cellHandler/cellHandler.js';
-import { featureTurn, testSequence } from '../../tests/interactionTests.js';
+import { batchTurn, testSequence } from '../../tests/sequenceHelpers.js';
 import unitTest from './tests/unitTest.js';
 
 
@@ -15,7 +15,7 @@ function TablePanel(props) {
         applyCellHandlers();
 
         let timer = setInterval(() => {
-            if (featureTurn.current == testSequence.get('TablePanel').turnNumber) {
+            if (batchTurn.current == testSequence.get('TablePanel').turnNumber) {
                 unitTest(testSequence.get('TablePanel').tests);
                 clearInterval(timer);
             }
