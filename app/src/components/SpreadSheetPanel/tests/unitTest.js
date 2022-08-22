@@ -3,7 +3,7 @@ import { keyInputTest } from '../handlers/keyboardEvents/test.js';
 import { batchTurn , nextTurn, concludeTestingBatch } from './../../../tests/sequenceHelpers.js'
 
 const t = {
-    KEYINPUT: 'KEYINPUT'
+    KEY_INPUT: 'KEY_INPUT'
 };
 
 function unitTest(testsToRun) {
@@ -17,7 +17,7 @@ function unitTest(testsToRun) {
     };
     for (const test of testsToRun.values()) {
         switch (test) {
-            case t.KEYINPUT:
+            case t.KEY_INPUT:
                 keyInputTest(atomicTurn);
                 break;
             default: break;

@@ -10,13 +10,14 @@ import TablePanel from '../TablePanel/TablePanel.js'
 import FormatPanel from '../FormatPanel/FormatPanel.js'
 import { store, mapStateToProps, mapDispatchToProps } from './../../store/store.js'
 import { setSheetDimensions } from './../../store/reducers/sheetDimensionsSlice.js'
+import { buildSheet } from '../TablePanel/helpers/buildSheet/buildSheet.js';
 
 class MainPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             sheetID: null, // get_URL_parameter(id)
-            loadedSheet: null,
+            loadedTable: null,
             autoSaveTimer: null,
         }
         this.setAutoSaveInterval = this.setAutoSaveInterval.bind(this);
@@ -27,7 +28,7 @@ class MainPanel extends React.Component {
             <div className="content" id="contentID" style={{ height: window.innerHeight * .95, width: '100%' }}>
                 {/*<FormatPanel />*/}
                 <div id='spreadsheet' tabIndex='-1' onKeyDown={keyPressed} onKeyUp={keyUpped}>
-                    <TablePanel loadedSheet={this.state.loadedSheet} rows={this.props.rows} cols={this.props.cols} rowHeight={this.props.rowHeight} colWidth={this.props.colWidth} />
+                    <TablePanel table={this.state.loadedTable} rows={this.props.rows} cols={this.props.cols} rowHeight={this.props.rowHeight} colWidth={this.props.colWidth} />
                 </div>
             </div>
         );
@@ -38,10 +39,11 @@ class MainPanel extends React.Component {
             loadSheetAPI(this.state.sheetID, this.props.storageURL)
                 .then(res => {
                     console.log(res);
+                    let loadedTable = buildSheet(res, parseInt(this.props.rows, 10), parseInt(this.props.cols, 10), parseInt(this.props.rowHeight, 10), parseInt(this.props.colWidth, 10));
                     if (res.status == 'success') {
                         let autoSaveInterval = this.setAutoSaveInterval();
                         this.setState({
-                            loadedSheet: res,
+                            loadedTable: loadedTable,
                             autoSaveInterval: autoSaveInterval,
                         })
                         document.querySelector('#back').removeAttribute('disabled');
@@ -110,9 +112,9 @@ class MainPanel extends React.Component {
 // ChartPanel: BAR, LINE, PIE, DOT
 //
 let whichTests = new Map([
-    ['TablePanel', new Set([/*'SELECTION', 'TEXTCHANGE', 'RESIZING'*/])],
-    ['SpreadSheetPanel', new Set([/*'KEYINPUT'*/])],
-    ['App', new Set(['ENDTOEND'])]
+    ['TablePanel', new Set([/*'SELECTION', 'TEXT_CHANGE', 'RESIZING'*/])],
+    ['SpreadSheetPanel', new Set([/*'KEY_INPUT'*/])],
+    ['App', new Set(['END_TO_END'])]
 ]);
 sequenceTests(whichTests);
 const MainContainer = connect(mapStateToProps, mapDispatchToProps)(MainPanel);

@@ -1,13 +1,14 @@
 import { resizersTests } from '../handlers/resizingHandler/test.js'
 import { selectionTest } from '../handlers/cellHandler/selectionHandler/test.js';
 import { textChangeTest } from '../handlers/cellHandler/textChangeHandler/test.js';
+import buildSheetTest from '../../TablePanel/helpers/buildSheet/test.js';
 
 import { batchTurn, nextTurn, concludeTestingBatch} from './../../../tests/sequenceHelpers.js'
 
 const t = {
-    BUILDSHEET: 'BUILDSHEET',
+    BUILD_SHEET: 'BUILD_SHEET',
     SELECTION: 'SELECTION',
-    TEXTCHANGE: 'TEXTCHANGE',
+    TEXT_CHANGE: 'TEXT_CHANGE',
     RESIZING: 'RESIZING'
 };
 
@@ -22,11 +23,11 @@ function unitTest(testsToRun) {
     };
     for (const test of testsToRun.values()) {
         switch (test) {
-            case t.BUILDSHEET: break;
+            case t.BUILD_SHEET: break;
             case t.SELECTION:
                 selectionTest(atomicTurn);
                 break;
-            case t.TEXTCHANGE:
+            case t.TEXT_CHANGE:
                 textChangeTest(atomicTurn);
                 break;
             case t.RESIZING:

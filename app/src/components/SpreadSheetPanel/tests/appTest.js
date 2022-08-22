@@ -1,9 +1,10 @@
 import endToEnd from './../../../tests/endToEnd.js'
 
-import { batchTurn , nextTurn, concludeTestingBatch } from './../../../tests/sequenceHelpers.js'
+import { batchTurn, nextTurn, concludeTestingBatch } from './../../../tests/sequenceHelpers.js'
 
 const t = {
-    ENDTOEND: 'ENDTOEND'
+    END_TO_END: 'END_TO_END',
+    INTEGRATION: 'INTEGRATION'
 };
 
 function appTest(testsToRun) {
@@ -17,9 +18,10 @@ function appTest(testsToRun) {
     };
     for (const test of testsToRun.values()) {
         switch (test) {
-            case t.ENDTOEND:
+            case t.END_TO_END:
                 endToEnd(atomicTurn);
                 break;
+            case t.INTEGRATION: break;
             default: break;
         }
     }
