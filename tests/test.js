@@ -1,5 +1,6 @@
 
 let fg = 1;
+process.exit(1);
 /*const { Builder, By, until } = require('selenium-webdriver');
 
 (async function example() {
