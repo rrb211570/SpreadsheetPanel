@@ -1,10 +1,12 @@
 
 let fg = 1;
 console.log('fg is: '+fg);
-process.exit();
-/*const { Builder, By, until } = require('selenium-webdriver');
 
-(async function example() {
+const { Builder, By, until } = require('selenium-webdriver');
+
+console.log('2 is: '+2);
+process.exit();
+/*(async function example() {
     let driver = await new Builder().forBrowser('firefox').build();
     try {
         let testNum = 1;
