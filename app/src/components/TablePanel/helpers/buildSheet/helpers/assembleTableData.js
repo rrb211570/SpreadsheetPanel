@@ -1,7 +1,7 @@
-function assembleTableData(loadedSheet, defaultRows, defaultCols, defaultHeight, defaultWidth) {
+function assembleTableData(loadedSheet, defaultRows, defaultCols, defaultCellHeight, defaultCellWidth) {
     let [rows, cols] = loadRowsCols(loadedSheet, defaultRows, defaultCols);
     let tableData = createEmptyTable(rows, cols);
-    loadTableData(loadedSheet, tableData, rows, cols, defaultHeight, defaultWidth);
+    loadTableData(loadedSheet, tableData, rows, cols, defaultCellHeight, defaultCellWidth);
     return tableData;
 }
 
@@ -23,12 +23,12 @@ function createEmptyTable(rows, cols) {
     return tableData;
 }
 
-function loadTableData(loadedSheet, tableData, rows, cols, defaultHeight, defaultWidth) {
+function loadTableData(loadedSheet, tableData, rows, cols, defaultCellHeight, defaultCellWidth) {
     if (loadedSheet != null && loadedSheet.hasOwnProperty('data')) {
         loadWithCellData(loadedSheet, tableData);
-        loadWithGroupData(loadedSheet, tableData, defaultWidth);
+        loadWithGroupData(loadedSheet, tableData, defaultCellWidth);
     }
-    applyDefaults(tableData, rows, cols, defaultHeight, defaultWidth);
+    applyDefaults(tableData, rows, cols, defaultCellHeight, defaultCellWidth);
     calculateAndApplyMarginLefts(tableData, rows, cols);
 }
 
@@ -50,7 +50,7 @@ function loadWithCellData(loadedSheet, tableData) { // cellData does not affect 
     }
 }
 
-function loadWithGroupData(loadedSheet, tableData, defaultWidth) {
+function loadWithGroupData(loadedSheet, tableData, defaultCellWidth) {
     if (loadedSheet.data.hasOwnProperty('groupData')) {
         for (const group of loadedSheet.data.groupData) {
             if (/^.col\d+$/.test(group.groupName) && group.hasOwnProperty('styleMap')) {
@@ -64,14 +64,14 @@ function loadWithGroupData(loadedSheet, tableData, defaultWidth) {
                     } else tableData[i][colNum + 1].styleMap.push(...group.styleMap);
                     // if width property in groupData, set marginLeft for every col thereafter
                     if (widthPair.length != 0) {
-                        let dx = parseInt(widthPair[0][1], 10) - defaultWidth; // dx for existing/default marginLeft
+                        let dx = parseInt(widthPair[0][1], 10) - defaultCellWidth; // dx for existing/default marginLeft
                         for (let j = 1 + colNum + 1; j < tableData[0].length; ++j) {
                             if (!tableData[i][j].hasOwnProperty('styleMap')) tableData[i][j].styleMap = [];
                             let alignPair = tableData[i][j].styleMap.filter(pair => pair[0] == 'marginLeft');
                             if (alignPair.length != 0) { // existing marginLeft
                                 tableData[i][j].styleMap = updateMarginLeftInStyleMap(tableData[i][j].styleMap, dx);
                             } else { // default marginLeft
-                                tableData[i][j].styleMap.push(['marginLeft', defaultWidth * (j - 2) + defaultWidth / 2 + dx]);
+                                tableData[i][j].styleMap.push(['marginLeft', defaultCellWidth * (j - 2) + defaultCellWidth / 2 + dx]);
                             }
                         }
                     }
@@ -99,21 +99,21 @@ function updateMarginLeftInStyleMap(styleMap, dx) {
 }
 
 // apply default value, height, and width
-function applyDefaults(tableData, rows, cols, defaultHeight, defaultWidth) {
+function applyDefaults(tableData, rows, cols, defaultCellHeight, defaultCellWidth) {
     for (let i = 0; i < rows + 1; ++i) {
         for (let j = 0; j < cols + 1; ++j) {
             let entry = tableData[i][j];
             if (i > 0 && j > 0 && !entry.hasOwnProperty('val')) entry.val = '';
             if (!entry.hasOwnProperty('styleMap')) {
                 entry.styleMap = [];
-                entry.styleMap.push(['height', defaultHeight]);
-                if (j == 0) entry.styleMap.push(['width', defaultWidth / 2]);
-                else if (j > 0) entry.styleMap.push(['width', defaultWidth]);
+                entry.styleMap.push(['height', defaultCellHeight]);
+                if (j == 0) entry.styleMap.push(['width', defaultCellWidth / 2]);
+                else if (j > 0) entry.styleMap.push(['width', defaultCellWidth]);
             } else {
                 let heightPair = entry.styleMap.filter(pair => pair[0] == 'height');
                 let widthPair = entry.styleMap.filter(pair => pair[0] == 'width');
-                if (heightPair.length == 0) entry.styleMap.push(['height', defaultHeight]);
-                if (widthPair.length == 0) entry.styleMap.push(['width', defaultWidth]);
+                if (heightPair.length == 0) entry.styleMap.push(['height', defaultCellHeight]);
+                if (widthPair.length == 0) entry.styleMap.push(['width', defaultCellWidth]);
             }
             tableData[i][j] = entry;
         }

@@ -5,15 +5,13 @@ import { store } from './../../../../store/store.js'
 function resizersTests(turn) {
     let axisCellsX = document.querySelectorAll('.AxisX');
     let axisCellsY = document.querySelectorAll('.AxisY');
+    let resizeSelections = [[axisCellsX, 10], [axisCellsY, 10], [[axisCellsX[0]], -20], [axisCellsY, -12], [[axisCellsX[0]], 20], [[axisCellsY[0]], 12]]
     try {
-        checkReactionOfResizingOnTable(axisCellsX, 10, turn, true);
-        checkReactionOfResizingOnTable(axisCellsY, 10, turn);
-        checkReactionOfResizingOnTable([axisCellsX[0]], -20, turn);
-        checkReactionOfResizingOnTable(axisCellsY, -12, turn);
-        checkReactionOfResizingOnTable([axisCellsX[0]], 20, turn);
-        checkReactionOfResizingOnTable([axisCellsY[0]], 12, turn);
-    } catch (error) {
-        console.log('resizingErr:checkReactionOfResizing: ' + error);
+        if (resizeSelections.length > 0) checkReactionOfResizingOnTable(1, resizeSelections[0], turn, true, resizeSelections.length);
+        for (let i = 1; i < resizeSelections.length; ++i) checkReactionOfResizingOnTable(i + 1, resizeSelections[i], turn, false, resizeSelections.length);
+    } catch (e) {
+        console.log('resizingErr: checkReactionOfResizing param error: ' + e);
+        logError(null, e);
     }
 }
 
@@ -57,8 +55,9 @@ function checkVerticalResizersInitialization() {
     }
 }
 
-function checkReactionOfResizingOnTable(axisCells, deltaIncrement, turn, isFirstCall) {
+function checkReactionOfResizingOnTable(testCaseIndex, resizeDetails, turn, isFirstCall, totalTestCases) {
     let timer;
+    let [axisCells, deltaIncrement] = resizeDetails;
     try {
         let axisClass = getAxisClass(axisCells);
         let resizer;
@@ -90,6 +89,7 @@ function checkReactionOfResizingOnTable(axisCells, deltaIncrement, turn, isFirst
                         mouseState++;
                     } else {
                         console.log('resizing affects store and DOM correctly');
+                        if (testCaseIndex == totalTestCases) logSuccess(totalTestCases);
                         nextTurn(turn); // increment turn.current
                         clearInterval(timer);
                     }
@@ -132,8 +132,9 @@ function checkReactionOfResizingOnTable(axisCells, deltaIncrement, turn, isFirst
                 default: break;
             }
         }, 5);
-    } catch (error) {
-        console.log('resizingErr: ' + error);
+    } catch (e) {
+        console.log('resizingErr: ' + e);
+        logError(testCaseIndex, e);
         clearInterval(timer);
     }
 }
@@ -278,6 +279,18 @@ function expectedChangeHistoryChanges(axisClass, delta, changeHistoryBeforeMove,
     } catch (error) {
         throw 'expectedChangeHistoryChanges(): ' + error;
     }
+}
+
+function logSuccess(totalTestCases) {
+    document.querySelector('#testConsoleLog').innerHTML = document.querySelector('#testConsoleLog').innerHTML + `,resizersTest(): ${totalTestCases}/${totalTestCases} PASS`;
+    let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
+    document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' NEXT';
+}
+
+function logError(testCaseIndex, e) {
+    document.querySelector('#testConsoleError').innerHTML = 'Err: resizersTest(): { testCaseIndex: ' + testCaseIndex + ' } : ' + e;
+    let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
+    document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' FAIL';
 }
 
 export { resizersTests, checkReactionOfResizingOnTable };

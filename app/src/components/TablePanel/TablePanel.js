@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { buildSheet } from './helpers/buildSheet/buildSheet.js'
 import { applyResizers } from './handlers/resizingHandler/resizingHandler.js'
 import applyCellHandlers from './handlers/cellHandler/cellHandler.js';
@@ -16,7 +16,7 @@ function TablePanel(props) {
 
         let timer = setInterval(() => {
             if (batchTurn.current == testSequence.get('TablePanel').turnNumber) {
-                unitTest(testSequence.get('TablePanel').tests);
+                unitTest(testSequence.get('TablePanel').tests, loadedSheet, rows, cols, rowHeight, colWidth);
                 clearInterval(timer);
             }
         }, 500);

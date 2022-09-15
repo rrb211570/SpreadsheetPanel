@@ -11,22 +11,25 @@ const ASSERT = 1;
 
 function keyInputTest(atomicTurn) {
     let events = [UNDO_DISPATCH, UNDO_FINISH, UNDO_DISPATCH, UNDO_FINISH, REDO_DISPATCH, REDO_FINISH, REDO_DISPATCH, REDO_FINISH, REDO_DISPATCH, REDO_FINISH, FLUFF_FULL];
-    if (validateSequence(events) == -1) return;
+    let totalTestCases = validateSequence(events);
+    if (totalTestCases == -1) return;
+    let testCaseIndex = 1;
 
     try {
         let keyState = new Set();
         for (let i = 0; i < events.length; ++i) {
             for (let j = 0; j < events[i].length; ++j) {
-                if (i == 0 && j == 0) checkReactionOfKeyInput(events[i][j], keyState, atomicTurn, true);
-                else checkReactionOfKeyInput(events[i][j], keyState, atomicTurn);
+                if (i == 0 && j == 0) checkReactionOfKeyInput(testCaseIndex, events[i][j], keyState, atomicTurn, true, totalTestCases);
+                else checkReactionOfKeyInput(++testCaseIndex, events[i][j], keyState, atomicTurn, false, totalTestCases);
             }
         }
     } catch (e) {
-        console.log('Error: ' + e);
+        console.log('Error: checkReactionOfKeyInput param error: ' + e);
+        logError(null, e);
     }
 }
 
-function checkReactionOfKeyInput(keyEvent, keyState, atomicTurn, isFirstCall) {
+function checkReactionOfKeyInput(testCaseIndex, keyEvent, keyState, atomicTurn, isFirstCall, totalTestCases) {
     let sheet = document.querySelector('#spreadsheet');
     let predictedKeyOutcome = null;
     let predictedChange = null;
@@ -60,6 +63,7 @@ function checkReactionOfKeyInput(keyEvent, keyState, atomicTurn, isFirstCall) {
                         console.log('-------------- Event: ' + predictedKeyOutcome);
                         compareStoreAndDOM(predictedKeyOutcome, predictedChange);
                     }
+                    if (testCaseIndex == totalTestCases) logSuccess(totalTestCases);
                     nextTurn(atomicTurn);
                     clearInterval(timer);
                     break;
@@ -67,6 +71,7 @@ function checkReactionOfKeyInput(keyEvent, keyState, atomicTurn, isFirstCall) {
             }
         } catch (e) {
             console.log('Error: ' + e);
+            logError(testCaseIndex, e);
             nextTurn(atomicTurn);
             clearInterval(timer);
         }
@@ -78,6 +83,7 @@ function checkReactionOfKeyInput(keyEvent, keyState, atomicTurn, isFirstCall) {
 function validateSequence(events) {
     try {
         let seen = new Set();
+        let totalEvents = 0;
         for (let i = 0; i < events.length; ++i) {
             for (let j = 0; j < events[i].length; ++j) {
                 let key = events[i][j];
@@ -88,9 +94,11 @@ function validateSequence(events) {
                 } else if (seen.has(key.id)) {
                     seen.delete(key.id);
                 } else throw 'keyInputTest(): UP event encountered without prior corresponding DOWN event\nkey: ' + key.id + ' ' + key.status + ' i: ' + i + ' j: ' + j;
+                totalEvents++;
             }
         }
         if (seen.size > 0) throw 'keyInputTest(): unfinished sequence (one or more DOWN events are missing concluding UP event)'
+        return totalEvents;
     } catch (e) {
         console.log('Error: ' + e);
         return -1;
@@ -253,6 +261,18 @@ function compareGroup(group, styleMap) {
             }
         }
     }
+}
+
+function logSuccess(totalTestCases) {
+    document.querySelector('#testConsoleLog').innerHTML = document.querySelector('#testConsoleLog').innerHTML + `,keyInputTest(): ${totalTestCases}/${totalTestCases} PASS`;
+    let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
+    document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' NEXT';
+}
+
+function logError(testCaseIndex, e) {
+    document.querySelector('#testConsoleError').innerHTML = 'Err: keyInputTest(): { testCaseIndex: ' + testCaseIndex + ' } : ' + e;
+    let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
+    document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' FAIL';
 }
 
 export { keyInputTest, checkReactionOfKeyInput, validateSequence };

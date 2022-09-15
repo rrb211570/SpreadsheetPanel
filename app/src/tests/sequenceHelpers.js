@@ -1,18 +1,27 @@
-let batchTurn = {
-    current: 1,
-    nextAvailable: 1
-};
 
-let testSequence = new Map();
+// ----------Possible Tests-=------------
+// TablePanel: BUILDSHEET, RESIZING, TEXTCHANGE
+// SpreadSheetPanel: KEYINPUT
+// FormatPanel: TEXTFORMAT, CELLFORMAT
+// FunctionPanel: FUNCTIONS
+// ChartPanel: BAR, LINE, PIE, DOT
+//
+let testSequence = new Map([
+    ['TablePanel', {
+        turnNumber: 1,
+        tests: new Set(['BUILD_SHEET'/*, 'SELECTION', 'TEXT_CHANGE', 'RESIZING'*/])
+    }],
+    ['SpreadSheetPanel', {
+        turnNumber: 2,
+        tests: new Set([/*'KEY_INPUT'*/])
+    }],
+    ['App', {
+        turnNumber: 3,
+        tests: new Set(['END_TO_END'])
+    }]
+]);
 
-function sequenceTests(whichTests) {
-    for (const key of whichTests.keys()) {
-        testSequence.set(key, {
-            turnNumber: getInLine(batchTurn),
-            tests: whichTests.get(key)
-        });
-    }
-}
+let batchTurn = { current: 1 };
 
 function getInLine(turn) {
     let myTurnNumber = turn.nextAvailable++;
@@ -32,4 +41,4 @@ function concludeTestingBatch(atomicTurn, batchTurn) {
     }, 100);
 }
 
-export { batchTurn, testSequence, sequenceTests, getInLine, nextTurn, concludeTestingBatch };
+export { batchTurn, testSequence, getInLine, nextTurn, concludeTestingBatch };

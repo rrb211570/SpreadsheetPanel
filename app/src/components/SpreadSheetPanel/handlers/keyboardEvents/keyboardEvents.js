@@ -1,6 +1,6 @@
 import { store } from './../../../../store/store.js'
 import { trackEvent } from "../../../../store/reducers/keyboardEventsSlice.js";
-import {undo, redo} from './../../../../data/modifiers/undoRedo.js'
+import { undo, redo } from './../../../../data/modifiers/undoRedo.js'
 
 const NO_COMMAND = 'No Command';
 const CONTROL = 'Control';

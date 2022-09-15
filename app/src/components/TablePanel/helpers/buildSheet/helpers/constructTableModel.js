@@ -20,8 +20,8 @@ function constructTableModel(tableData, defaultHeight, defaultWidth) {
     return tableModel;
 }
 
-function getRowsCols(tableData){
-    return [tableData.length-1, tableData[0].length-1];
+function getRowsCols(tableData) {
+    return [tableData.length - 1, tableData[0].length - 1];
 }
 
 function constructTopAxis(tableData, cols, defaultHeight, defaultWidth) {
@@ -92,4 +92,4 @@ function stopPropagation(e) {
     e.stopPropagation();
 }
 
-export default constructTableModel;
+export { constructTableModel, getRowsCols };

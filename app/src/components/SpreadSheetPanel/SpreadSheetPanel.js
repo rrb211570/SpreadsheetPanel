@@ -1,13 +1,14 @@
+import TestConsolePanel from '../TestConsolePanel/TestConsolePanel.js';
 import React from 'react';
 import { Provider, connect } from 'react-redux'
-import { batchTurn, sequenceTests, testSequence } from '../../tests/sequenceHelpers.js';
+import { batchTurn, testSequence } from '../../tests/sequenceHelpers.js';
 
 import unitTest from './tests/unitTest.js';
 import appTest from './tests/appTest.js';
 import { loadSheetAPI, saveAPI } from './helpers/API.js';
 import { keyPressed, keyUpped } from './handlers/keyboardEvents/keyboardEvents.js';
+
 import TablePanel from '../TablePanel/TablePanel.js'
-import FormatPanel from '../FormatPanel/FormatPanel.js'
 import { store, mapStateToProps, mapDispatchToProps } from './../../store/store.js'
 import { setSheetDimensions } from './../../store/reducers/sheetDimensionsSlice.js'
 import { buildSheet } from '../TablePanel/helpers/buildSheet/buildSheet.js';
@@ -17,7 +18,7 @@ class MainPanel extends React.Component {
         super(props);
         this.state = {
             sheetID: null, // get_URL_parameter(id)
-            loadedTable: null,
+            loadedSheet: null,
             autoSaveTimer: null,
         }
         this.setAutoSaveInterval = this.setAutoSaveInterval.bind(this);
@@ -26,9 +27,9 @@ class MainPanel extends React.Component {
     render() {
         return (
             <div className="content" id="contentID" style={{ height: window.innerHeight * .95, width: '100%' }}>
-                {/*<FormatPanel />*/}
+                <TestConsolePanel />
                 <div id='spreadsheet' tabIndex='-1' onKeyDown={keyPressed} onKeyUp={keyUpped}>
-                    <TablePanel table={this.state.loadedTable} rows={this.props.rows} cols={this.props.cols} rowHeight={this.props.rowHeight} colWidth={this.props.colWidth} />
+                    <TablePanel loadedSheet={this.state.loadedSheet} rows={this.props.rows} cols={this.props.cols} rowHeight={this.props.rowHeight} colWidth={this.props.colWidth} />
                 </div>
             </div>
         );
@@ -39,11 +40,10 @@ class MainPanel extends React.Component {
             loadSheetAPI(this.state.sheetID, this.props.storageURL)
                 .then(res => {
                     console.log(res);
-                    let loadedTable = buildSheet(res, parseInt(this.props.rows, 10), parseInt(this.props.cols, 10), parseInt(this.props.rowHeight, 10), parseInt(this.props.colWidth, 10));
                     if (res.status == 'success') {
                         let autoSaveInterval = this.setAutoSaveInterval();
                         this.setState({
-                            loadedTable: loadedTable,
+                            loadedSheet: res,
                             autoSaveInterval: autoSaveInterval,
                         })
                         document.querySelector('#back').removeAttribute('disabled');
@@ -104,19 +104,6 @@ class MainPanel extends React.Component {
     }
 }
 
-// ----------Possible Tests-=------------
-// TablePanel: BUILDSHEET, RESIZING, TEXTCHANGE
-// SpreadSheetPanel: KEYINPUT
-// FormatPanel: TEXTFORMAT, CELLFORMAT
-// FunctionPanel: FUNCTIONS
-// ChartPanel: BAR, LINE, PIE, DOT
-//
-let whichTests = new Map([
-    ['TablePanel', new Set([/*'SELECTION', 'TEXT_CHANGE', 'RESIZING'*/])],
-    ['SpreadSheetPanel', new Set([/*'KEY_INPUT'*/])],
-    ['App', new Set(['END_TO_END'])]
-]);
-sequenceTests(whichTests);
 const MainContainer = connect(mapStateToProps, mapDispatchToProps)(MainPanel);
 function SpreadSheetPanel(defaultRows, defaultCols, defaultRowHeight, defaultColWidth, storageURL) {
 

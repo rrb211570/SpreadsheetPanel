@@ -1,4 +1,4 @@
-name: learn-github-actions
+name: JavaScript CI with Selenium & baked-in vanilla e2e
 on: [push]
 jobs:
   check-bats-version:

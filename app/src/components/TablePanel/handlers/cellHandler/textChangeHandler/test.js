@@ -6,18 +6,18 @@ const ARRANGE_AND_ACTION = 0;
 const ASSERT = 1;
 
 function textChangeTest(turn) {
+    let changes = [[4, 5, 'blah'], [1, 1, 'burger'], [3, 7, 'hello'], [8, 2, 'world'], [2, 4, 'apple']];
     try {
-        checkReactionOfTextChange(4, 5, 'blah', turn, true);
-        checkReactionOfTextChange(1, 1, 'burger', turn);
-        checkReactionOfTextChange(3, 7, 'hello', turn);
-        checkReactionOfTextChange(8, 2, 'world', turn);
-        checkReactionOfTextChange(2, 4, 'apple', turn);
+        if (changes.length > 0) checkReactionOfTextChange(1, changes[0], turn, true, changes.length);
+        for (let i = 1; i < changes.length; ++i) checkReactionOfTextChange(i + 1, changes[i], turn, false, changes.length);
     } catch (e) {
-        console.log('Error: ' + e);
+        console.log('Error: checkReactionOfTextChange param error: ' + e);
+        logError(null, null, null, null, e);
     }
 }
 
-function checkReactionOfTextChange(rowNum, colNum, newText, turn, isFirstCall) {
+function checkReactionOfTextChange(testCaseIndex, testDetails, turn, isFirstCall, totalTestCases) {
+    let [rowNum, colNum, newText] = testDetails;
     let cellInput = document.querySelector(`.row${rowNum}.col${colNum} input`);
     let myTurnNumber = getInLine(turn);
     let stage = WAIT_IN_QUEUE;
@@ -52,12 +52,14 @@ function checkReactionOfTextChange(rowNum, colNum, newText, turn, isFirstCall) {
                 case ASSERT:
                     compareStoreAndDOM(rowNum, colNum, cellInput, prevText, newText, prevState, prevHistoryIndex, textChangeExpected);
                     console.log('textChange affects store and DOM correctly');
+                    if (testCaseIndex == totalTestCases) logSuccess(totalTestCases);
                     nextTurn(turn);
                     clearInterval(timer);
                     break;
             }
         } catch (e) {
             console.log('checkReactionOfTextChange(): ' + e);
+            logError(testCaseIndex, rowNum, colNum, newText, e);
             clearInterval(timer);
         }
     }, 200);
@@ -110,6 +112,18 @@ function compareStoreAndDOM(rowNum, colNum, cellInput, prevText, newText, prevSt
     if (cellOfCurrentState.getVal() != newText) throw 'compareStoreAndDOM(): val of current individualEntry does not match newText';
     // check styles
     if (cellOfCurrentState.getStyleMap().size != 0) throw 'compareStoreAndDOM(): unexpected styleEntry in current individualEntry';
+}
+
+function logSuccess(totalTestCases) {
+    document.querySelector('#testConsoleLog').innerHTML = document.querySelector('#testConsoleLog').innerHTML + `,textChangeTest(): ${totalTestCases}/${totalTestCases} PASS`;
+    let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
+    document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' NEXT';
+}
+
+function logError(testCaseIndex, rowNum, colNum, newText, e) {
+    document.querySelector('#testConsoleError').innerHTML = 'Err: textChangeTest(): { testCaseIndex: ' + testCaseIndex + ', rowNum: ' + rowNum + ', colNum: ' + colNum + ', text: ' + newText + ' } : ' + e;
+    let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
+    document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' FAIL';
 }
 
 export { textChangeTest, checkReactionOfTextChange };

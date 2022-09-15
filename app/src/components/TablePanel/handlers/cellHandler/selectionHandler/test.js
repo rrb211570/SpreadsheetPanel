@@ -11,18 +11,18 @@ const ACTION_DOUBLE_CLICK = 2;
 const ASSERT_DOUBLE_CLICK = 3;
 
 function selectionTest(atomicTurn) {
+    let selections = [[4, 5], [1, 1], [3, 7], [8, 2], [2, 4]];
     try {
-        checkReactionOfDoubleClickSelection(4, 5, atomicTurn, true);
-        checkReactionOfDoubleClickSelection(1, 1, atomicTurn);
-        checkReactionOfDoubleClickSelection(3, 7, atomicTurn);
-        checkReactionOfDoubleClickSelection(8, 2, atomicTurn);
-        checkReactionOfDoubleClickSelection(2, 4, atomicTurn);
+        if (selections.length > 0) checkReactionOfDoubleClickSelection(1, selections[0], atomicTurn, true, selections.length);
+        for (let i = 1; i < selections.length; ++i) checkReactionOfDoubleClickSelection(i + 1, selections[i], atomicTurn, false, selections.length);
     } catch (e) {
-        console.log('Error: ' + e);
+        console.log('Error: checkReactionOfDoubleClickSelection param error: ' + e);
+        logError(null, null, null, e);
     }
 }
 
-function checkReactionOfSingleClickSelection(rowNum, colNum, atomicTurn, isFirstCall) {
+function checkReactionOfSingleClickSelection(testCaseIndex, testDetails, atomicTurn, isFirstCall, totalTestCases) {
+    let [rowNum, colNum] = testDetails;
     let cell = document.querySelector(`.row${rowNum}.col${colNum} .selectionLayer`);
     let myTurnNumber = getInLine(atomicTurn);
     let stage = WAIT_IN_QUEUE;
@@ -51,18 +51,21 @@ function checkReactionOfSingleClickSelection(rowNum, colNum, atomicTurn, isFirst
                 case ASSERT:
                     compareStoreAndDOM_singleClick(prevSelectionEntries, expectedSelectionEntries);
                     console.log('selection (single click) affects store and DOM correctly');
+                    if (testCaseIndex == totalTestCases) logSuccess(totalTestCases);
                     nextTurn(atomicTurn);
                     clearInterval(timer);
                     break;
             }
         } catch (e) {
             console.log('checkReactionOfSelection(): ' + e);
+            logError(testCaseIndex, rowNum, colNum, e);
             clearInterval(timer);
         }
     }, 200);
 }
 
-function checkReactionOfDoubleClickSelection(rowNum, colNum, atomicTurn, isFirstCall) {
+function checkReactionOfDoubleClickSelection(testCaseIndex, testDetails, atomicTurn, isFirstCall, totalTestCases) {
+    let [rowNum, colNum] = testDetails;
     let cell = document.querySelector(`.row${rowNum}.col${colNum} .selectionLayer`);
     let myTurnNumber = getInLine(atomicTurn);
     let stage = WAIT_IN_QUEUE;
@@ -99,6 +102,7 @@ function checkReactionOfDoubleClickSelection(rowNum, colNum, atomicTurn, isFirst
                 case ASSERT_DOUBLE_CLICK:
                     compareStoreAndDOM_doubleClick(prevSelectionEntries, expectedSelectionEntries);
                     console.log('selection (double click) affects store and DOM correctly');
+                    if (testCaseIndex == totalTestCases) logSuccess(totalTestCases);
                     nextTurn(atomicTurn);
                     clearInterval(timer);
                     break;
@@ -106,6 +110,7 @@ function checkReactionOfDoubleClickSelection(rowNum, colNum, atomicTurn, isFirst
             }
         } catch (e) {
             console.log('checkReactionOfDoubleClickSelection(): ' + e);
+            logError(testCaseIndex, rowNum, colNum, e);
             clearInterval(timer);
         }
     }, 200);
@@ -127,7 +132,7 @@ function compareStoreAndDOM_doubleClick(prevSelectionEntries, expectedSelectionE
     assertCurrentSelectionClearedOfHighlights(currentSelectionEntries); // different here
 }
 
-function assertCurrentSelectionEqualsExpectedSelection(currentSelectionEntries, expectedSelectionEntries){
+function assertCurrentSelectionEqualsExpectedSelection(currentSelectionEntries, expectedSelectionEntries) {
     for (const entry of currentSelectionEntries.values()) {
         if (!expectedSelectionEntries.has(entry)) throw 'compareStoreAndDOM(): currentSelectionEntries has entry that expectedSelectionEntries does not have';
     }
@@ -136,7 +141,7 @@ function assertCurrentSelectionEqualsExpectedSelection(currentSelectionEntries, 
     }
 }
 
-function getSetDifference(prevSelectionEntries, currentSelectionEntries){
+function getSetDifference(prevSelectionEntries, currentSelectionEntries) {
     let setDifference = new Set();
     for (const entry of prevSelectionEntries.values()) {
         if (!currentSelectionEntries.has(entry)) setDifference.add(entry);
@@ -144,7 +149,7 @@ function getSetDifference(prevSelectionEntries, currentSelectionEntries){
     return setDifference;
 }
 
-function assertSetDifferenceClearedOfHighlights(setDifference){
+function assertSetDifferenceClearedOfHighlights(setDifference) {
     for (const entry of setDifference.values()) {
         let rowNum = parseInt(entry.split(',')[0], 10);
         let colNum = parseInt(entry.split(',')[1], 10);
@@ -153,7 +158,7 @@ function assertSetDifferenceClearedOfHighlights(setDifference){
     }
 }
 
-function assertCurrentSelectionHighlighted(currentSelectionEntries){
+function assertCurrentSelectionHighlighted(currentSelectionEntries) {
     for (const entry of currentSelectionEntries.values()) {
         let rowNum = parseInt(entry.split(',')[0], 10);
         let colNum = parseInt(entry.split(',')[1], 10);
@@ -162,13 +167,25 @@ function assertCurrentSelectionHighlighted(currentSelectionEntries){
     }
 }
 
-function assertCurrentSelectionClearedOfHighlights(currentSelectionEntries){
+function assertCurrentSelectionClearedOfHighlights(currentSelectionEntries) {
     for (const entry of currentSelectionEntries.values()) {
         let rowNum = parseInt(entry.split(',')[0], 10);
         let colNum = parseInt(entry.split(',')[1], 10);
         let highlightLayer = document.querySelector(`.row${rowNum}.col${colNum} .highlightLayer`);
         if (highlightLayer.style.border != 'medium none') throw 'compareStoreAndDOM(): currentSelectedCell not cleared of highlight: ' + rowNum + ' ' + colNum;
     }
+}
+
+function logSuccess(totalTestCases) {
+    document.querySelector('#testConsoleLog').innerHTML = document.querySelector('#testConsoleLog').innerHTML + `,selectionTest(): ${totalTestCases}/${totalTestCases} PASS`;
+    let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
+    document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' NEXT';
+}
+
+function logError(testCaseIndex, rowNum, colNum, e) {
+    document.querySelector('#testConsoleError').innerHTML = 'Err: selectionTest(): { testCaseIndex: ' + testCaseIndex + ', rowNum: ' + rowNum + ', colNum: ' + colNum + ' } : ' + e;
+    let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
+    document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' FAIL';
 }
 
 export { selectionTest, checkReactionOfSingleClickSelection, checkReactionOfDoubleClickSelection };

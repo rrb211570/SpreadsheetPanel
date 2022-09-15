@@ -3,7 +3,7 @@ import { selectionTest } from '../handlers/cellHandler/selectionHandler/test.js'
 import { textChangeTest } from '../handlers/cellHandler/textChangeHandler/test.js';
 import buildSheetTest from '../../TablePanel/helpers/buildSheet/test.js';
 
-import { batchTurn, nextTurn, concludeTestingBatch} from './../../../tests/sequenceHelpers.js'
+import { batchTurn, nextTurn, concludeTestingBatch } from './../../../tests/sequenceHelpers.js'
 
 const t = {
     BUILD_SHEET: 'BUILD_SHEET',
@@ -12,7 +12,7 @@ const t = {
     RESIZING: 'RESIZING'
 };
 
-function unitTest(testsToRun) {
+function unitTest(testsToRun, loadedSheet, rows, cols, defaultCellHeight, defaultCellWidth) {
     if (testsToRun.size == 0) {
         nextTurn(batchTurn);
         return;
@@ -23,7 +23,9 @@ function unitTest(testsToRun) {
     };
     for (const test of testsToRun.values()) {
         switch (test) {
-            case t.BUILD_SHEET: break;
+            case t.BUILD_SHEET:
+                buildSheetTest(atomicTurn, loadedSheet, rows, cols, defaultCellHeight, defaultCellWidth);
+                break;
             case t.SELECTION:
                 selectionTest(atomicTurn);
                 break;
@@ -38,7 +40,5 @@ function unitTest(testsToRun) {
     }
     concludeTestingBatch(atomicTurn, batchTurn);
 }
-
-
 
 export default unitTest;
