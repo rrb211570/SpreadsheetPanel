@@ -13,4 +13,6 @@ jobs:
       - run: |
           npm ci
           npm start & npx wait-on http://localhost:3000
-          npm test
+      - run:
+          using: 'node16'
+          main: 'tests/test.js'
