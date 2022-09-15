@@ -10,6 +10,9 @@ jobs:
           node-version: '16'
       - run: npm install -g bats
       - run: bats -v
+      - name: install geckodriver
+        - uses: browser-actions/setup-geckodriver@latest
+      - run: geckodriver --version
       - run: |
           npm ci
           npm start & npx wait-on http://localhost:3000
