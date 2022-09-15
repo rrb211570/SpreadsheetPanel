@@ -4,16 +4,16 @@ console.log('fg is: ' + fg);
 
 const { Builder, By, until } = require('selenium-webdriver');
 const firefox = require('selenium-webdriver/firefox');
-const binary = new firefox.Binary();
-binary.addArguments("--headless");
+const myOptions = new firefox.Options();
+myOptions.addArguments("--headless");
 
 console.log('2 is: ' + 2);
 (async function example() {
     try {
         let driver = await new Builder()
             .forBrowser('firefox')
-            .setFirefoxOptions(new firefox.Options().setBinary(binary));
-        await driver.build();
+            .setFirefoxOptions(myOptions)
+            .build();
         try {
             let testNum = 1;
             console.log('testNum is: ' + testNum);
