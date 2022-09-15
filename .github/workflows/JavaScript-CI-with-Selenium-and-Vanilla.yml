@@ -16,6 +16,7 @@ jobs:
       - name: install firefox
         uses: browser-actions/setup-firefox@latest
       - run: firefox --version
+      - run: which firefox
       - run: |
           npm ci
           npm start & npx wait-on http://localhost:3000

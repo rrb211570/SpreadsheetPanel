@@ -12,8 +12,8 @@ console.log('2 is: ' + 2);
     try {
         let driver = await new Builder()
             .forBrowser('firefox')
-            .setFirefoxOptions(new firefox.Options().setBinary(binary))
-            .build();
+            .setFirefoxOptions(new firefox.Options().setBinary(binary));
+        await driver.build();
         try {
             let testNum = 1;
             console.log('testNum is: ' + testNum);
