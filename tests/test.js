@@ -5,12 +5,12 @@ console.log('fg is: '+fg);
 const { Builder, By, until } = require('selenium-webdriver');
 
 console.log('2 is: '+2);
-process.exit();
-/*(async function example() {
+(async function example() {
     let driver = await new Builder().forBrowser('firefox').build();
     try {
         let testNum = 1;
-        await driver.get('http://localhost:3000/');
+        console.log('testNum is: '+testNum);
+        /*await driver.get('http://localhost:3000/');
         let elem = await driver.findElement(By.id('testConsoleStatus'));
         await driver.wait(until.elementTextContains(elem, 'NEXT'));
 
@@ -30,9 +30,9 @@ process.exit();
             let logTextArr = logText.split(',');
             console.log(logTextArr[logTextArr.length - 1]);
             testNum++;
-        }
+        }*/
     } finally {
         await driver.quit();
         process.exit();
     }
-})();*/
+})();
