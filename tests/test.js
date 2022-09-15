@@ -1,15 +1,16 @@
 
 let fg = 1;
-console.log('fg is: '+fg);
+console.log('fg is: ' + fg);
 
 const { Builder, By, until } = require('selenium-webdriver');
 
-console.log('2 is: '+2);
+console.log('2 is: ' + 2);
 (async function example() {
-    let driver = await new Builder().forBrowser('firefox').build();
+    let driver;
     try {
+        driver = await new Builder().forBrowser('firefox').build();
         let testNum = 1;
-        console.log('testNum is: '+testNum);
+        console.log('testNum is: ' + testNum);
         /*await driver.get('http://localhost:3000/');
         let elem = await driver.findElement(By.id('testConsoleStatus'));
         await driver.wait(until.elementTextContains(elem, 'NEXT'));
@@ -31,6 +32,8 @@ console.log('2 is: '+2);
             console.log(logTextArr[logTextArr.length - 1]);
             testNum++;
         }*/
+    } catch (e) {
+        console.log('myError: ' + e);
     } finally {
         await driver.quit();
         process.exit();
