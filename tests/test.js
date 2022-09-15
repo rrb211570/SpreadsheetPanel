@@ -7,7 +7,7 @@ const { Builder, By, until } = require('selenium-webdriver');
 console.log('2 is: ' + 2);
 (async function example() {
     try {
-        let driver = await new Builder().forBrowser('firefox').build();
+        let driver = await new Builder().forBrowser('firefox').setFirefoxOptions('-headless').build();
         try {
             let testNum = 1;
             console.log('testNum is: ' + testNum);
