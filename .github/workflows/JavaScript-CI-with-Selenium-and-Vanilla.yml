@@ -10,3 +10,7 @@ jobs:
           node-version: '14'
       - run: npm install -g bats
       - run: bats -v
+      - run: |
+          npm ci
+          npm start & npx wait-on http://localhost:3000
+      #- run: node tests/test.js
