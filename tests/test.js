@@ -3,11 +3,17 @@ let fg = 1;
 console.log('fg is: ' + fg);
 
 const { Builder, By, until } = require('selenium-webdriver');
+const firefox = require('selenium-webdriver/firefox');
+const binary = new firefox.Binary();
+binary.addArguments("--headless");
 
 console.log('2 is: ' + 2);
 (async function example() {
     try {
-        let driver = await new Builder().forBrowser('firefox').setFirefoxOptions('-headless').build();
+        let driver = await new Builder()
+            .forBrowser('firefox')
+            .setFirefoxOptions(new firefox.Options().setBinary(binary))
+            .build();
         try {
             let testNum = 1;
             console.log('testNum is: ' + testNum);
