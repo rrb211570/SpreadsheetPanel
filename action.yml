@@ -1,4 +1,4 @@
-name: 'Run selenium test'
+name: 'Run Selenium test'
 runs:
   using: 'node16'
   main: 'tests/test.js'
