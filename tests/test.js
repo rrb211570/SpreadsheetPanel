@@ -32,11 +32,9 @@ myOptions.addArguments("--headless");
         }
         await driver.quit();
     } catch (e) {
-        core.setOutput("testingSuccess", false);
         core.setFailed(e);
         process.exit(1);
     } finally {
-        core.setOutput("testingSuccess", true);
         process.exit();
     }
 })();
