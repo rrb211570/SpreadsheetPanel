@@ -23,7 +23,8 @@ myOptions.addArguments("--headless");
                     throw errText;
                 } else if (/.*SUCCESS.*/.test(statusText)) {
                     console.log('ALL TESTS PASSED SUCCESSFULLY');
-                    break;
+                    throw 'blah';
+                    //break;
                 }
                 let logText = await driver.findElement(By.id('testConsoleLog')).getText();
                 let logTextArr = logText.split(',');
