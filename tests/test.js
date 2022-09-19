@@ -30,13 +30,13 @@ myOptions.addArguments("--headless");
             console.log(logTextArr[logTextArr.length - 1]);
             testNum++;
         }
+        await driver.quit();
     } catch (e) {
         core.setOutput("testingSuccess", false);
         core.setFailed(e);
         process.exit(1);
     } finally {
         core.setOutput("testingSuccess", true);
-        await driver.quit();
         process.exit();
     }
 })();
