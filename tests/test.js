@@ -6,6 +6,7 @@ myOptions.addArguments("--headless");
 
 (async function example() {
     try {
+        let testNum = 1;
         let driver = await new Builder()
             .forBrowser('firefox')
             .setFirefoxOptions(myOptions)
