@@ -20,9 +20,7 @@ myOptions.addArguments("--headless");
                 let statusText = await elem.getText();
                 if (/.*FAIL.*/.test(statusText)) {
                     let errText = await driver.findElement(By.id('testConsoleError')).getText();
-                    console.log('\n' + errText);
-                    process.exitCode = 1;
-                    break;
+                    throw errText;
                 } else if (/.*SUCCESS.*/.test(statusText)) {
                     console.log('ALL TESTS PASSED SUCCESSFULLY');
                     break;
@@ -33,13 +31,13 @@ myOptions.addArguments("--headless");
                 testNum++;
             }
         } finally {
-            core.setOutput("testSuccess", true);
+            core.setOutput("testingSuccess", true);
             await driver.quit();
             process.exit();
         }
     } catch (e) {
         core.setOutput("testingSuccess", false);
-        let errMsg = 'myError: ' + e;
         core.setFailed(errMsg);
+        process.exit(1);
     }
 })();
