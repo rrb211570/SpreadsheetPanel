@@ -1,13 +1,9 @@
-
-let fg = 1;
-console.log('fg is: ' + fg);
-
+const core = require('@actions/core');
 const { Builder, By, until } = require('selenium-webdriver');
 const firefox = require('selenium-webdriver/firefox');
 const myOptions = new firefox.Options();
 myOptions.addArguments("--headless");
 
-console.log('2 is: ' + 2);
 (async function example() {
     try {
         let driver = await new Builder()
@@ -15,8 +11,6 @@ console.log('2 is: ' + 2);
             .setFirefoxOptions(myOptions)
             .build();
         try {
-            let testNum = 1;
-            console.log('testNum is: ' + testNum);
             await driver.get('http://localhost:3000/');
             let elem = await driver.findElement(By.id('testConsoleStatus'));
             await driver.wait(until.elementTextContains(elem, 'NEXT'));
@@ -39,10 +33,13 @@ console.log('2 is: ' + 2);
                 testNum++;
             }
         } finally {
+            core.setOutput("testSuccess", true);
             await driver.quit();
             process.exit();
         }
     } catch (e) {
-        console.log('myError: ' + e);
+        core.setOutput("testingSuccess", false);
+        let errMsg = 'myError: ' + e;
+        core.setFailed(errMsg);
     }
 })();

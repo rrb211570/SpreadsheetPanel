@@ -21,5 +21,7 @@ jobs:
           npm ci
           npm start & npx wait-on http://localhost:3000
       - name: Run Selenium test
-        id: hello
+        id: selenium
         uses: ./
+      - name: Get the output time
+        run: echo "Selenium tests succeeded: ${{ steps.selenium.outputs.testingSuccess }}"

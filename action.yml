@@ -8,6 +8,9 @@ description: 'Greet someone and record the time'
 #outputs:
 #  time: # id of output
 #    description: 'The time we greeted you'
+outputs:
+  testingSuccess: # id of output
+    description: 'Outcome of Selenium test'
 runs:
   using: 'node16'
   main: 'tests/test.js'
