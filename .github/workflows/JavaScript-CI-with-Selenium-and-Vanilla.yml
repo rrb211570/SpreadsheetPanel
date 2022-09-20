@@ -22,15 +22,15 @@ jobs:
       - name: Run Selenium test
         id: selenium
         uses: ./
-  push:
-    needs: test
-    runs-on: ubuntu-latest
-    if: needs.test.outputs.status == 'success'
-    steps:
-      - uses: actions/checkout@v2
-      - name: Commit report
-        run: |
-          git config --global user.name '$github.actor'
-          git config --global user.email '$github.actor@users.noreply.github.com'
-          git commit -am '${{ github.event.head_commit.message }}'
-          git push
+  #push:
+   # needs: test
+    #runs-on: ubuntu-latest
+    #if: needs.test.outputs.status == 'success'
+    #steps:
+    #  - uses: actions/checkout@v2
+    #  - name: Commit report
+    #    run: |
+     #     git config --global user.name '$github.actor'
+      #    git config --global user.email '$github.actor@users.noreply.github.com'
+      #    git commit -am '${{ github.event.head_commit.message }}'
+      #    git push
