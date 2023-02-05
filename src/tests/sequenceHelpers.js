@@ -22,7 +22,7 @@ let testSequence = new Map([
     }],
     ['FormatPanel', {
         turnNumber: 2,
-        tests: new Set(['BOLD', 'ITALIC', 'STRIKETHROUGH', 'FONT_FAMILY', 'FONT_SIZE', 'FONT_COLOR','CELL_COLOR','BORDERS','HORIZONTAL_ALIGNMENT', 'VERTICAL_ALIGNMENT'])
+        tests: new Set(['BOLD', 'ITALIC', 'STRIKETHROUGH', 'FONT_FAMILY', 'FONT_SIZE', 'FONT_COLOR', 'CELL_COLOR', 'BORDERS', 'HORIZONTAL_ALIGNMENT', 'VERTICAL_ALIGNMENT'])
     }],
     ['App', {
         turnNumber: 4,
@@ -41,7 +41,7 @@ function nextTurn(turn) {
     turn.current++;
 }
 
-function concludeTestingBatch(atomicTurn, batchTurn) {
+function concludeTestingBatch(atomicTurn) {
     let timer = setInterval(() => {
         if (atomicTurn.current == atomicTurn.nextAvailable) { // if all turns have finished
             nextTurn(batchTurn);
@@ -50,4 +50,14 @@ function concludeTestingBatch(atomicTurn, batchTurn) {
     }, 100);
 }
 
-export { batchTurn, testSequence, getInLine, nextTurn, concludeTestingBatch };
+function concludeAllTestsWhenDone() {
+    let timer = setInterval(() => {
+        if (batchTurn.current == 6) {
+            let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
+            document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' SUCCESS';
+            clearInterval(timer);
+        }
+    }, 100);
+}
+
+export { batchTurn, testSequence, getInLine, nextTurn, concludeTestingBatch, concludeAllTestsWhenDone };

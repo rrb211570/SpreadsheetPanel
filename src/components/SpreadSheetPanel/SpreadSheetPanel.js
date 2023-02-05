@@ -1,6 +1,6 @@
 import TestConsolePanel from '../TestConsolePanel/TestConsolePanel.js';
 import React from 'react';
-import { batchTurn, testSequence } from '../../tests/sequenceHelpers.js';
+import { batchTurn, concludeAllTests, concludeAllTestsWhenDone, testSequence } from '../../tests/sequenceHelpers.js';
 
 import unitTest from './tests/unitTest.js';
 import appTest from './tests/appTest.js';
@@ -78,6 +78,7 @@ class SpreadSheetPanel extends React.Component {
                 clearInterval(timer2);
             }
         })
+        concludeAllTestsWhenDone();
     }
     shouldComponentUpdate() {
         return false; // prevent re-renders from changes to Redux

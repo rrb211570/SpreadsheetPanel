@@ -67,7 +67,7 @@ function unitTest(testsToRun) {
             default: break;
         }
     }
-    concludeTestingBatch(atomicTurn, batchTurn);
+    concludeTestingBatch(atomicTurn);
 }
 
 export default unitTest;

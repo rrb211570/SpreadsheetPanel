@@ -38,7 +38,7 @@ function unitTest(testsToRun, loadedSheet, rows, cols, defaultCellHeight, defaul
             default: break;
         }
     }
-    concludeTestingBatch(atomicTurn, batchTurn);
+    concludeTestingBatch(atomicTurn);
 }
 
 export default unitTest;

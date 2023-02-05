@@ -25,7 +25,7 @@ function appTest(testsToRun) {
             default: break;
         }
     }
-    concludeTestingBatch(atomicTurn, batchTurn);
+    concludeTestingBatch(atomicTurn);
 }
 
 export default appTest;
