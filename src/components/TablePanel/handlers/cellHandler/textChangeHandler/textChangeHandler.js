@@ -24,6 +24,7 @@ function applyTextChangeHandler(entryCell) {
 
     const onBlurHandler = function (e) {
         if (changeOccurred) {
+            e.target.parentElement.querySelector('.cellValue').innerText = input.value;
             newData.setIndividualEntry('.' + row + '.' + col, uselessStyleMap, rowNum, colNum, input.value);
             recordChange(prevData, newData);
         }

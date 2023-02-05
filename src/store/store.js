@@ -1,17 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import { newHistoryState, undo, redo, clearHistory, save, rollBackAndMerge } from './reducers/historySlice.js'
+import { loadSheet, newHistoryState, undo, redo, clearHistory, save, rollBackAndMerge } from './reducers/historySlice.js'
 import { setSelection } from './reducers/selectionSlice.js'
 import { enableTest, trackEvent } from './reducers/keyboardEventsSlice.js'
-import { setSheetDimensions } from './reducers/sheetDimensionsSlice.js'
+import { setTableDimensions } from './reducers/tableDimensionsSlice.js'
 
 import historyReducer from './reducers/historySlice.js'
 import selectionReducer from './reducers/selectionSlice.js'
-import keyboardEventsReducer from './reducers/keyboardEventsSlice.js.js'
-import sheetDimensionsReducer from './reducers/sheetDimensionsSlice.js'
+import keyboardEventsReducer from './reducers/keyboardEventsSlice.js'
+import tableDimensionsReducer from './reducers/tableDimensionsSlice.js'
 
 const mapStateToProps = (state) => {
     return {
+        loadedSheet: state.history.loadedSheet,
         changeHistory: state.history.changeHistory,
         changeHistoryIndex: state.history.changeHistoryIndex,
         collectedData: state.history.collectedData,
@@ -24,13 +25,16 @@ const mapStateToProps = (state) => {
         outcome: state.keyboardEvents.outcome,
         timeTravelCounter: state.keyboardEvents.timeTravelCounter,
 
-        tableHeight: state.sheetDimensions.tableHeight,
-        tableWidth: state.sheetDimensions.tableWidth,
+        tableHeight: state.tableDimensions.height,
+        tableWidth: state.tableDimensions.width,
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        loadSheet: (sheet) => {
+            dispatch(loadSheet(sheet));
+        },
         newHistoryState: (prevRecordedData, dataAfterChange, collectedData) => {
             dispatch(newHistoryState(prevRecordedData, dataAfterChange, collectedData));
         },
@@ -49,17 +53,17 @@ const mapDispatchToProps = (dispatch) => {
         rollBackAndMerge: () => {
             dispatch(rollBackAndMerge());
         },
-        setSelection: (entries) => {
-            dispatch(setSelection(entries));
+        setSelection: (entries, categories) => {
+            dispatch(setSelection(entries, categories));
         },
-        enableTest: (enableTest)=>{
+        enableTest: (enableTest) => {
             dispatch(enableTest(enableTest));
         },
-        trackEvent: (inputMode, outcome, timeTravelCounter)=>{
+        trackEvent: (inputMode, outcome, timeTravelCounter) => {
             dispatch(trackEvent(inputMode, outcome, timeTravelCounter))
         },
-        setSheetDimensions: (height, width) => {
-            dispatch(setSheetDimensions(height, width));
+        setTableDimensions: (height, width) => {
+            dispatch(setTableDimensions(height, width));
         },
 
     }
@@ -70,7 +74,7 @@ const store = configureStore({
         history: historyReducer,
         selection: selectionReducer,
         keyboardEvents: keyboardEventsReducer,
-        sheetDimensions: sheetDimensionsReducer,
+        tableDimensions: tableDimensionsReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

@@ -1,24 +1,22 @@
 import { store } from './../../store/store.js'
-import { setSheetDimensions } from './../../store/reducers/sheetDimensionsSlice.js'
+import { setTableDimensions } from '../../store/reducers/tableDimensionsSlice.js'
+import { updateScrollDimensions } from '../../components/TablePanel/handlers/scrollSnapHandler/scrollSnapHandler.js';
 
-function updateSheetDimensions(styleMap) {
+function updateTableDimensions(styleMap) {
     let h = null;
     let w = null;
     for (const [property, value] of styleMap.entries()) {
         if (property == 'height') h = value;
         else if (property == 'width') w = value;
     }
-    document.getElementById('spreadsheet').querySelectorAll('.resizer-horizontal').forEach(resizer => {
-        if (h != null) resizer.style.height = h + 'px';
-    });
-    document.getElementById('spreadsheet').querySelectorAll('.resizer-vertical').forEach(resizer => {
-        if (w != null) resizer.style.width = w + 'px';
-    });
-    store.dispatch(setSheetDimensions({ tableHeight: h, tableWidth: w }));
+    store.dispatch(setTableDimensions({ height: h, width: w }));
 }
 
 function applyChange(entry, styleMap, val) {
-    if (val != null) entry.querySelector('input').value = val;
+    if (val != null) {
+        entry.querySelector('input').value = val;
+        entry.querySelector('.cellValueDiv>.cellValue').innerText = val;
+    }
     for (const [property, value] of styleMap.entries()) {
         switch (property) {
             case 'height':
@@ -29,8 +27,7 @@ function applyChange(entry, styleMap, val) {
                 if ([...entry.classList].filter(name => /^row0$/.test(name)).length == 0 &&
                     [...entry.classList].filter(name => /^col0$/.test(name)).length == 0 &&
                     [...entry.classList].filter(name => /^col\d+$/.test(name)).length != 0) {
-                    entry.querySelector('input').style.height = value - 4 + 'px';
-                    entry.querySelector('#cover').style.height = value + 'px';
+                    entry.querySelector('.coverDiv').style.height = value + 'px';
                 }
                 break;
             case 'width':
@@ -39,12 +36,71 @@ function applyChange(entry, styleMap, val) {
                     [...entry.classList].filter(name => /^col0$/.test(name)).length == 0 &&
                     [...entry.classList].filter(name => /^col\d+$/.test(name)).length != 0) {
                     entry.querySelector('input').style.width = value - 4 + 'px';
-                    entry.querySelector('#cover').style.width = value + 'px';
+                    entry.querySelector('.coverDiv').style.width = value + 'px';
                 }
                 break;
             case 'marginLeft':
                 entry.style.marginLeft = value + 'px';
                 break;
+            case 'fontWeight':
+                entry.querySelector('.cellValue').style.fontWeight = value;
+                break;
+            case 'fontStyle':
+                entry.querySelector('.cellValue').style.fontStyle = value;
+                break;
+            case 'textDecoration':
+                entry.querySelector('.cellValue').style.textDecoration = value;
+                break;
+            case 'cellColor':
+                entry.querySelector('.cellValueDiv').style.backgroundColor = value;
+                break;
+            case 'fontColor':
+                entry.querySelector('.cellValue').style.color = value;
+                break;
+            case 'horizontalAlignment':
+                entry.querySelector('.cellValue').style.textAlign = value;
+                break;
+            case 'verticalAlignment':
+                let parsedValue = value;
+                switch (value) {
+                    case 'top':
+                        parsedValue = 'flex-start';
+                        break;
+                    case 'bottom':
+                        parsedValue = 'flex-end';
+                        break;
+                    default: break;
+                }
+                entry.querySelector('.cellValueDiv').style.justifyContent = parsedValue;
+                break;
+            case 'fontFamily':
+                entry.querySelector('.cellValue').style.fontFamily = value;
+                break;
+            case 'fontSize':
+                entry.querySelector('.cellValue').style.fontSize = value + 'px';
+                break;
+            case 'borders':
+                let boxShadows = '';
+                for (let i = 0; i < value.length; ++i) {
+                    switch (value[i]) {
+                        case 'top': boxShadows += 'inset 0 3px 0 -1px black';
+                            break;
+                        case 'right': boxShadows += 'inset -3px 0 0 -1px black';
+                            break;
+                        case 'bottom': boxShadows += 'inset 0 -3px 0 -1px black';
+                            break;
+                        case 'left': boxShadows += 'inset 3px 0 0 -1px black';
+                            break;
+                        case 'none': boxShadows = 'none';
+                            break;
+                        default: break;
+                    }
+                    if (i < value.length - 1) boxShadows += ',';
+                }
+                if (boxShadows == '') boxShadows = 'none';
+                entry.querySelector('.cellValueDiv').style.boxShadow = boxShadows;
+                break;
+            default: break;
         }
     }
 }
@@ -59,17 +115,18 @@ function applyGroupChange(group, styleMap) {
                 for (let i = 1; i < entries.length; ++i) {
                     entries[i].style.width = value + 'px';
                     entries[i].querySelector('input').style.width = value - 8 + 'px';
-                    entries[i].querySelector('.selectionLayer').style.width = value + 'px';
-                    entries[i].querySelector('.highlightLayer').style.width = value - 4 + 'px';
+                    entries[i].querySelector('.coverDiv').style.width = value + 'px';
                 }
                 let colNum = parseInt(group.match(/(\d+)/)[0], 10);
-                let elem = null;
+                let elem;
                 while ((elem = document.querySelector(`.col${++colNum}`)) != null) {
                     let entries = document.querySelectorAll(`.col${colNum}`);
                     for (let i = 0; i < entries.length; ++i) {
                         entries[i].style.marginLeft = parseInt(entries[i].style.marginLeft, 10) + dx + 'px';
                     }
                 }
+                document.querySelector('#scrollBarLayer').style.width = store.getState().tableDimensions.width - 50 + 'px';
+                updateScrollDimensions();
             }
         }
     } else if (/^\.row\d+$/.test(group)) {
@@ -81,13 +138,13 @@ function applyGroupChange(group, styleMap) {
                 entries[1].style.lineHeight = value + 'px';
                 for (let i = 2; i < entries.length; ++i) {
                     entries[i].style.height = value + 'px';
-                    entries[i].querySelector('input').style.height = value - 6 + 'px';
-                    entries[i].querySelector('.selectionLayer').style.height = value + 'px';
-                    entries[i].querySelector('.highlightLayer').style.height = value - 4 + 'px';
+                    entries[i].querySelector('.coverDiv').style.height = value + 'px';
                 }
+                document.querySelector('#scrollBarLayer').style.height = store.getState().tableDimensions.height - 22 + 'px';
+                updateScrollDimensions();
             }
         }
     }
 }
 
-export { updateSheetDimensions, applyChange, applyGroupChange };
+export { updateTableDimensions, applyChange, applyGroupChange };

@@ -1,5 +1,5 @@
 import applyTextChangeHandler from './textChangeHandler/textChangeHandler.js';
-import applySelectionHandler from './selectionHandler/selectionHandler.js'
+import { applySelectionHandler } from './selectionHandler/selectionHandler.js'
 
 function applyCellHandlers() {
     const entryCells = [...document.querySelectorAll('.entryCell')];

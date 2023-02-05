@@ -20,57 +20,7 @@ code {
   background-color: white;
 }
 
-.resizer-horizontal {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 5px;
-  cursor: col-resize;
-  user-select: none;
-}
-
-.resizer-vertical {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  vertical-align: bottom;
-  height: 5px;
-  cursor: row-resize;
-  user-select: none;
-}
-
-.resizing-horizontal {
-  border-right: 2px solid blue;
-  z-index: 2;
-}
-
-.resizing-vertical {
-  border-bottom: 2px solid blue;
-  z-index: 2;
-}
-
 #spreadsheet {
   position: absolute;
   background-color: white;
-}
-
-.AxisX, .AxisY, .origin {
-  position: absolute;
-  border: 0.8px solid #ACACAC;
-  background-color:#EFEFEF;
-  color: #5F5F5F;
-  margin: 0;
-  text-align: center;
-  z-index: 1;
-}
-
-.entryCell {
-  position: absolute;
-  border: 0.5px solid #D5D5D5;
-  background-color:white;
-  text-align: center;
-}
-
-.selectionLayer {
-  outline: none;
 }

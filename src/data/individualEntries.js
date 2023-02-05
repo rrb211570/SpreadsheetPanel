@@ -1,11 +1,11 @@
-class SpreadSheet {
+class Table {
     #styleMap;
     constructor(styleMap) {
-        if (!(styleMap instanceof Map)) throw 'Data:SpreadSheet: styleMap param must be a Map()'
+        if (!(styleMap instanceof Map)) throw 'Data:Table: styleMap param must be a Map()'
         for (const [property, value] of styleMap.entries()) {
             if (property == 'height' || property == 'width') {
-                if (isNaN(parseInt(value, 10)) || parseInt(value, 10) !== value) throw 'Data:SpreadSheet:constructor:styleMap: value of height/width must be valid num';
-            } else throw 'Data:SpreadSheet:constructor:styleMap: found invalid property' + property;
+                if (isNaN(parseInt(value, 10)) || parseInt(value, 10) !== value) throw 'Data:Table:constructor:styleMap: value of height/width must be valid num';
+            } else throw 'Data:Table:constructor:styleMap: found invalid property' + property;
         }
         this.#styleMap = styleMap;
     }
@@ -13,14 +13,14 @@ class SpreadSheet {
         return this.#styleMap;
     }
     putStyle(property, value) {
-        if (property === null || property === undefined || value === null || value === undefined) throw 'Data:SpreadSheet:putStyle: property or value is null/undefined';
+        if (property === null || property === undefined || value === null || value === undefined) throw 'Data:Table:putStyle: property or value is null/undefined';
         if (property == 'width' || property == 'height') {
-            if (isNaN(parseInt(value, 10)) || parseInt(value, 10) != value) throw 'Data:SpreadSheet:putStyle: value for height/width must be valid num';
-        } else throw 'Data:SpreadSheet:putStyle: found invalid property' + property;
+            if (isNaN(parseInt(value, 10)) || parseInt(value, 10) != value) throw 'Data:Table:putStyle: value for height/width must be valid num';
+        } else throw 'Data:Table:putStyle: found invalid property' + property;
         this.#styleMap.set(property, value);
     }
     setStyleMap(styleMap) {
-        if (!(styleMap instanceof Map)) throw 'Data:SpreadSheet: styleMap param must be a Map()';
+        if (!(styleMap instanceof Map)) throw 'Data:Table: styleMap param must be a Map()';
         this.#styleMap = styleMap;
     }
     clearStyleMap() {
@@ -76,8 +76,9 @@ class Cell {
     constructor(styleMap, row, col, val) {
         if (!(styleMap instanceof Map)) throw 'Data:Cell:constructor: styleMap param must be a Map()';
         for (const [property, value] of styleMap.entries()) {
-            if (property == 'height' || property == 'width' || property == 'marginLeft') {
-                if (isNaN(parseInt(value, 10)) || parseInt(value, 10) !== value) throw 'Data:Cell:constructor:styleMap: value of height/width/marginLeft must be valid num';
+            if (property == 'height' || property == 'width' || property == 'marginLeft' || property == 'fontWeight'|| property == 'fontSize') {
+                if (isNaN(parseInt(value, 10)) || parseInt(value, 10) !== value) throw 'Data:Cell:constructor:styleMap: value of ' + property + ' must be valid num';
+            } else if (property == 'fontStyle' || property == 'textDecoration' || property == 'cellColor' || property == 'fontColor' || property == 'horizontalAlignment' || property == 'verticalAlignment' || property == 'fontFamily' || property == 'borders') {
             } else throw 'Data:Cell:constructor:styleMap: found invalid property' + property;
         }
         if (isNaN(parseInt(row, 10)) || parseInt(row, 10) !== row) throw 'Data:Cell:constructor: row param must be valid num';
@@ -101,8 +102,9 @@ class Cell {
     }
     putStyle(property, value) {
         if (property === null || property === undefined || value === null || value === undefined) throw 'Data:Cell:putStyle: property or value is null/undefined';
-        if (property == 'width' || property == 'height' || property == 'marginLeft') {
-            if (isNaN(parseInt(value, 10)) || parseInt(value, 10) != value) throw 'Data:Cell:putStyle: value for height/width/marginLeft must be valid num';
+        if (property == 'width' || property == 'height' || property == 'marginLeft' || property == 'fontWeight'|| property == 'fontSize') {
+            if (isNaN(parseInt(value, 10)) || parseInt(value, 10) != value) throw 'Data:Cell:putStyle: value for ' + property + ' must be valid num';
+        } else if (property == 'fontStyle' || property == 'textDecoration' || property == 'cellColor' || property == 'fontColor' || property == 'horizontalAlignment' || property == 'verticalAlignment' || property == 'fontFamily' || property == 'borders') {
         } else throw 'Data:Cell:putStyle: found invalid property' + property;
         this.#styleMap.set(property, value);
     }
@@ -133,7 +135,7 @@ class IndividualEntries {
     }
     setEntry(entryKey, styleMap, row, col, val) {
         this.#entries.set(entryKey,
-            entryKey == 'spreadsheet' ? new SpreadSheet(styleMap) :
+            entryKey == 'table' ? new Table(styleMap) :
                 !/.col./.test(entryKey) ? new Row(styleMap, row) :
                     new Cell(styleMap, row, col, val)
         );

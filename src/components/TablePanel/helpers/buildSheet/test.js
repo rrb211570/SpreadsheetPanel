@@ -1,6 +1,8 @@
+import { store } from "../../../../store/store";
+import { logError, logSuccess } from "../../../../tests/helper";
 import { getInLine, nextTurn } from "../../../../tests/sequenceHelpers";
-import assembleTableData from './helpers/assembleTableData.js'
-import { getRowsCols } from './helpers/constructTableModel.js'
+import assembleTableData from './helpers/assembleTableData.js';
+import { getRowsCols } from './helpers/util.js';
 
 function buildSheetTest(atomicTurn, loadedSheet, rows, cols, defaultCellHeight, defaultCellWidth) {
     let myTurnNumber = getInLine(atomicTurn);
@@ -11,7 +13,7 @@ function buildSheetTest(atomicTurn, loadedSheet, rows, cols, defaultCellHeight, 
             if (atomicTurn.current == myTurnNumber) {
                 console.log('\n--------BUILD TEST-----------------------');
                 let tableData = assembleTableData(loadedSheet, rows, cols, defaultCellHeight, defaultCellWidth);
-                [rows, cols] = getRowsCols(tableData);
+                [rows, cols] = [store.getState().tableDimensions.totalRows, store.getState().tableDimensions.totalCols];
 
                 // assert that all axis cells exist
                 let axisCellsX = document.querySelectorAll('.AxisX');
@@ -25,20 +27,20 @@ function buildSheetTest(atomicTurn, loadedSheet, rows, cols, defaultCellHeight, 
                 for (let i = 0; i < rows; i++) {
                     for (let j = 0; j < cols; j++) {
                         let entryCell = document.querySelector(`.row${i + 1}.col${j + 1}.entryCell`);
-                        let entryCellData = tableData[i + 1][j + 1];
+                        let entryCellData = tableData[i][j];
 
-                        if (entryCell.querySelector('input').value != entryCellData.val) throw 'DOM value does not match tableData for cell: row' + i + ' col' + j + ' ' + entryCellData.val;
+                        if (entryCell.querySelector('input').value != entryCellData.val) throw 'DOM value does not match tableData for cell: row' + (i + 1) + ' col' + (j + 1) + ' ' + entryCellData.val;
 
                         for (let p = 0; p < entryCellData.styleMap.length; ++p) {
                             switch (entryCellData.styleMap[p][0]) {
                                 case 'height':
-                                    if (parseInt(entryCell.style.height, 10) != entryCellData.styleMap[p][1]) throw 'DOM cell height does not match tableData: row' + i + ' col' + j;
+                                    if (parseInt(entryCell.style.height, 10) != entryCellData.styleMap[p][1]) throw 'DOM cell height does not match tableData: row' + (i + 1) + ' col' + (j + 1);
                                     break;
                                 case 'width':
-                                    if (parseInt(entryCell.style.width, 10) != entryCellData.styleMap[p][1]) throw 'DOM cell width does not match tableData: row' + i + ' col' + j;
+                                    if (parseInt(entryCell.style.width, 10) != entryCellData.styleMap[p][1]) throw 'DOM cell width does not match tableData: row' + (i + 1) + ' col' + (j + 1);
                                     break;
                                 case 'marginLeft':
-                                    if (parseInt(entryCell.style.marginLeft, 10) != entryCellData.styleMap[p][1]) throw 'DOM cell marginLeft does not match tableData: row' + i + ' col' + j;
+                                    if (parseInt(entryCell.style.marginLeft, 10) != entryCellData.styleMap[p][1]) throw 'DOM cell marginLeft does not match tableData: row' + (i + 1) + ' col' + (j + 1);
                                     break;
                                 default: break;
                             }
@@ -47,27 +49,17 @@ function buildSheetTest(atomicTurn, loadedSheet, rows, cols, defaultCellHeight, 
                 }
 
                 console.log('buildTest successful');
-                logSuccess();
+                logSuccess('buildTest()', 1);
                 nextTurn(atomicTurn);
                 clearInterval(timer);
             }
         } catch (e) {
-            console.log('Err: buildSheetTest(): ' + e);
-            logError(e);
+            let errMsg = 'Err: buildSheetTest(): ' + e;
+            console.log(errMsg);
+            logError(errMsg);
             clearInterval(timer);
         }
     }, 100);
-}
-function logSuccess() {
-    document.querySelector('#testConsoleLog').innerHTML = document.querySelector('#testConsoleLog').innerHTML + ',buildSheetTest(): PASS';
-    let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
-    document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' NEXT';
-}
-
-function logError(e) {
-    document.querySelector('#testConsoleError').innerHTML = 'Err: buildSheetTest(): ' + e;
-    let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
-    document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' FAIL';
 }
 
 export default buildSheetTest;

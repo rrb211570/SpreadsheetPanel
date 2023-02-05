@@ -1,23 +1,32 @@
 
 // ----------Possible Tests-=------------
-// TablePanel: BUILDSHEET, RESIZING, TEXTCHANGE
-// SpreadSheetPanel: KEYINPUT
-// FormatPanel: TEXTFORMAT, CELLFORMAT
-// FunctionPanel: FUNCTIONS
-// ChartPanel: BAR, LINE, PIE, DOT
+// TablePanel: BUILD_SHEET, SELECTION, TEXT_CHANGE, RESIZING
+// SpreadSheetPanel: KEY_INPUT
+// MenuPanel: MENU_INTERACTION
+// FormatPanel: BOLD, ITALIC, STRIKETHROUGH, FONT_FAMILY
+// (not implemented) FunctionPanel: FUNCTIONS
+// (not implemented) ChartPanel: BAR, LINE, PIE, DOT
 //
 let testSequence = new Map([
     ['TablePanel', {
         turnNumber: 1,
-        tests: new Set(['BUILD_SHEET'/*, 'SELECTION', 'TEXT_CHANGE', 'RESIZING'*/])
+        tests: new Set(['BUILD_SHEET', 'SELECTION', 'TEXT_CHANGE', 'RESIZING'])
     }],
     ['SpreadSheetPanel', {
-        turnNumber: 2,
+        turnNumber: 5,
         tests: new Set([/*'KEY_INPUT'*/])
     }],
-    ['App', {
+    ['MenuPanel', {
         turnNumber: 3,
-        tests: new Set(['END_TO_END'])
+        tests: new Set([/*'MENU_INTERACTION'*/])
+    }],
+    ['FormatPanel', {
+        turnNumber: 2,
+        tests: new Set(['BOLD', 'ITALIC', 'STRIKETHROUGH', 'FONT_FAMILY', 'FONT_SIZE', 'FONT_COLOR','CELL_COLOR','BORDERS','HORIZONTAL_ALIGNMENT', 'VERTICAL_ALIGNMENT'])
+    }],
+    ['App', {
+        turnNumber: 4,
+        tests: new Set([/*'END_TO_END'*/])
     }]
 ]);
 

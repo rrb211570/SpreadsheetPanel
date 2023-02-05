@@ -6,11 +6,13 @@ const NO_COMMAND = 'No Command';
 const CONTROL = 'Control';
 const META = 'Meta'
 const SHIFT = 'Shift';
+const CONTROL_SHIFT = 'Control_Shift';
 const NO_CHANGE = 'No Change';
 
 // Handle CTRL+Z/Y (undo/redo) and CTRL/SHIFT selections.
 function keyPressed(e) {
     console.log(e.key.padStart(7, ' ') + ' DOWN');
+    let deleteThisVariable;
     switch (store.getState().keyboardEvents.inputMode) {
         case NO_COMMAND:
             if (e.key === CONTROL || e.key === META) {
@@ -22,8 +24,14 @@ function keyPressed(e) {
         case CONTROL:
             if (e.key === 'z') undo();
             else if (e.key === 'y') redo();
+            else if (e.key === 'x') deleteThisVariable = 0;
+            else if (e.key === 'c') deleteThisVariable = 0;
+            else if (e.key === 'v') deleteThisVariable = 0;
             break;
         case SHIFT:
+            break;
+        case CONTROL_SHIFT:
+            if (e.key === 'f') deleteThisVariable = 0; //formatPaint
             break;
         default: break;
     }

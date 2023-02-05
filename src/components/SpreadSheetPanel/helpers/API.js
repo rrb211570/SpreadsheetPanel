@@ -35,7 +35,7 @@ function exposeCollectedData(data) {
         individual.styleMap = [...[...value.getStyleMap().entries()].map(styleEntry => {
             return [styleEntry[0], styleEntry[1]];
         })];
-        if (entryKey != 'spreadsheet' && !/.col\d+/.test(entryKey)) individual.row = value.getRow();
+        if (entryKey != 'sheet' && !/.col\d+/.test(entryKey)) individual.row = value.getRow();
         else if (/.col\d+/.test(entryKey)) {
             individual.row = value.getCellRow();
             individual.col = value.getCellCol();

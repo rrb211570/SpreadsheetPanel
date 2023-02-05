@@ -1,4 +1,4 @@
-import { updateSheetDimensions, applyChange, applyGroupChange } from './applyChange.js';
+import { updateTableDimensions, applyChange, applyGroupChange } from './applyChange.js';
 import updateCollectedData from './updateCollectedData.js';
 import { store } from './../../store/store.js'
 import { trackEvent } from "./../../store/reducers/keyboardEventsSlice.js";
@@ -17,7 +17,10 @@ function undo() {
     if (changeHistoryIndex > 0) {
         if (enableTest) store.dispatch(trackEvent({ outcome: UNDO, timeTravelCounter: timeTravelCounter + 1 }));
         for (const [entryKey, data] of changeHistory[changeHistoryIndex - 1].getIndividualEntries()) {
-            if (entryKey == 'spreadsheet') updateSheetDimensions(data.getStyleMap());
+            if (entryKey == 'table') {
+                console.log('table: ');
+                updateTableDimensions(data.getStyleMap());
+            }
             else if (!/\.col\d+/.test(entryKey)) {
                 let entry = document.getElementById(entryKey.match(/\.row\d+/));
                 applyChange(entry, data.getStyleMap());
@@ -27,6 +30,7 @@ function undo() {
             }
         }
         for (const [group, styleMap] of changeHistory[changeHistoryIndex - 1].getGroupEntries()) {
+            console.log('group: ' + group);
             applyGroupChange(group, styleMap);
         }
         let updatedCollectedData = updateCollectedData(changeHistory[changeHistoryIndex - 1], collectedData);
@@ -45,8 +49,8 @@ function redo() {
     if (changeHistoryIndex < changeHistory.length - 1) {
         if (enableTest) store.dispatch(trackEvent({ outcome: REDO, timeTravelCounter: timeTravelCounter + 1 }));
         for (const [entryKey, data] of changeHistory[changeHistoryIndex + 1].getIndividualEntries()) {
-            if (entryKey == 'spreadsheet') {
-                updateSheetDimensions(data.getStyleMap(), updateSheetDimensions);
+            if (entryKey == 'table') {
+                updateTableDimensions(data.getStyleMap(), updateTableDimensions);
             } else if (!/\.col\d+/.test(entryKey)) {
                 let entry = document.getElementById(entryKey.match(/\.row\d+$/));
                 applyChange(entry, data.getStyleMap());

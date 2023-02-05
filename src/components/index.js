@@ -1,3 +1,3 @@
-import SpreadSheetPanel from './SpreadSheetPanel/SpreadSheetPanel.js'
+import BodyPanel from './BodyPanel/BodyPanel.js'
 
-export { SpreadSheetPanel };
+export { BodyPanel };

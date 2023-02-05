@@ -22,7 +22,7 @@ class Data {
     getGroupEntries() {
         return this.#groupStyles.getGroupEntries();
     }
-    getGroupEntriesSize(){
+    getGroupEntriesSize() {
         return this.#groupStyles.size();
     }
     clearGroupEntries() {
@@ -42,7 +42,7 @@ class Data {
     getIndividualEntries() {
         return this.#individualEntries.getEntries();
     }
-    getIndividualEntriesSize(){
+    getIndividualEntriesSize() {
         return this.#individualEntries.size();
     }
     clearIndividualEntries() {

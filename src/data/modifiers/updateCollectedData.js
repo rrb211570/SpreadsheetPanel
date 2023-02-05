@@ -9,7 +9,7 @@ function updateCollectedData(dataAfterChange, prevCollectedData) {
         }
         for (const [property, val] of data.getStyleMap().entries()) styleMap.set(property, val);
         let args = [entryKey, styleMap];
-        if (entryKey != 'spreadsheet' && !/\.col\d+/.test(entryKey)) args.push(data.getRow());
+        if (entryKey != 'table' && !/\.col\d+/.test(entryKey)) args.push(data.getRow());
         if (/\.col\d+/.test(entryKey)) {
             args.push(data.getCellRow(), data.getCellCol());
             if (prevCollectedData.hasIndividualEntry(entryKey)) args.push(prevCollectedData.getIndividualEntry(entryKey).getVal());
@@ -19,7 +19,7 @@ function updateCollectedData(dataAfterChange, prevCollectedData) {
     }
     for (const [entryKey, data] of prevCollectedData.getIndividualEntries()) {
         let args = [entryKey, data.getStyleMap()];
-        if (entryKey != 'spreadsheet' && !/\.col\d+/.test(entryKey)) args.push(data.getRow());
+        if (entryKey != 'table' && !/\.col\d+/.test(entryKey)) args.push(data.getRow());
         if (/\.col\d+/.test(entryKey)) args.push(data.getCellRow(), data.getCellCol(), data.getVal());
         if (!updatedCollectedData.hasIndividualEntry(entryKey)) updatedCollectedData.setIndividualEntry(...args)
     }

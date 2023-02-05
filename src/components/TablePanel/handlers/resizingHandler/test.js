@@ -1,14 +1,15 @@
 import { getInLine, nextTurn } from '../../../../tests/sequenceHelpers.js'
 import { getResizableColData, getResizableRowData } from './resizingHandler.js'
 import { store } from './../../../../store/store.js'
+import { logError, logSuccess } from '../../../../tests/helper.js';
 
 function resizersTests(turn) {
     let axisCellsX = document.querySelectorAll('.AxisX');
     let axisCellsY = document.querySelectorAll('.AxisY');
-    let resizeSelections = [[axisCellsX, 10], [axisCellsY, 10], [[axisCellsX[0]], -20], [axisCellsY, -12], [[axisCellsX[0]], 20], [[axisCellsY[0]], 12]]
+    let resizeSelections = [[axisCellsX, -5], [axisCellsY, -1], [[axisCellsX[0]], 15], [axisCellsY, 12], [[axisCellsX[0]], 20], [[axisCellsY[0]], 12]]
     try {
-        if (resizeSelections.length > 0) checkReactionOfResizingOnTable(1, resizeSelections[0], turn, true, resizeSelections.length);
-        for (let i = 1; i < resizeSelections.length; ++i) checkReactionOfResizingOnTable(i + 1, resizeSelections[i], turn, false, resizeSelections.length);
+        if (resizeSelections.length > 0) checkReactionOfResizing(1, resizeSelections[0], turn, true, resizeSelections.length);
+        for (let i = 1; i < resizeSelections.length; ++i) checkReactionOfResizing(i + 1, resizeSelections[i], turn, false, resizeSelections.length);
     } catch (e) {
         console.log('resizingErr: checkReactionOfResizing param error: ' + e);
         logError(null, e);
@@ -18,14 +19,13 @@ function resizersTests(turn) {
 function checkHorizontalResizersInitialization() {
     try {
         let elems = document.querySelectorAll('.AxisX');
-        let sheetDimensions = store.getState().sheetDimensions;
         let logMsg = '';
         elems.forEach((elem, idx) => {
             let resizer = elem.querySelector('.resizer-horizontal')
             if (resizer == null) {
                 logMsg = logMsg + 'col' + (idx + 1) + ': horizontal resizer not found\n';
-            } else if (sheetDimensions.tableHeight != (parseInt(resizer.style.height, 10))) {
-                logMsg = logMsg + 'col' + (idx + 1) + ': horizontal resizer does not match sheet height' + sheetDimensions.tableHeight + ' b ' + resizer.style.height + '\n';
+            } else if (22 != (parseInt(resizer.style.height, 10))) {
+                logMsg = logMsg + 'col' + (idx + 1) + ': horizontal resizer does not match height of Y-axis cell \'' + resizer.style.height + '\' : should be \'22px\' \n';
             }
         })
         if (logMsg.length != 0) console.log(logMsg);
@@ -38,14 +38,13 @@ function checkHorizontalResizersInitialization() {
 function checkVerticalResizersInitialization() {
     try {
         let elems = document.querySelectorAll('.AxisY');
-        let sheetDimensions = store.getState().sheetDimensions;
         let logMsg = '';
         elems.forEach((elem, idx) => {
             let resizer = elem.querySelector('.resizer-vertical')
             if (resizer == null) {
                 logMsg = logMsg + 'row' + idx + ': vertical resizer not found\n';
-            } else if (sheetDimensions.tableWidth != (parseInt(resizer.style.width, 10))) {
-                logMsg = logMsg + 'row' + idx + ': vertical resizer does not match sheet width' + sheetDimensions.tableWidth + ' b ' + resizer.style.width + '\n';
+            } else if (50 != (parseInt(resizer.style.width, 10))) {
+                logMsg = logMsg + 'row' + idx + ': vertical resizer does not match width of X-axis cell \'' + resizer.style.width + '\' : should be \'50px\'\n';
             }
         })
         if (logMsg.length != 0) console.log(logMsg);
@@ -55,7 +54,7 @@ function checkVerticalResizersInitialization() {
     }
 }
 
-function checkReactionOfResizingOnTable(testCaseIndex, resizeDetails, turn, isFirstCall, totalTestCases) {
+function checkReactionOfResizing(testCaseIndex, resizeDetails, turn, isFirstCall, totalTestCases) {
     let timer;
     let [axisCells, deltaIncrement] = resizeDetails;
     try {
@@ -89,7 +88,7 @@ function checkReactionOfResizingOnTable(testCaseIndex, resizeDetails, turn, isFi
                         mouseState++;
                     } else {
                         console.log('resizing affects store and DOM correctly');
-                        if (testCaseIndex == totalTestCases) logSuccess(totalTestCases);
+                        if (testCaseIndex == totalTestCases) logSuccess('resizingTest()', totalTestCases);
                         nextTurn(turn); // increment turn.current
                         clearInterval(timer);
                     }
@@ -133,8 +132,9 @@ function checkReactionOfResizingOnTable(testCaseIndex, resizeDetails, turn, isFi
             }
         }, 5);
     } catch (e) {
-        console.log('resizingErr: ' + e);
-        logError(testCaseIndex, e);
+        let errMsg = 'Err: checkReactionOfResizing(): { testCaseIndex: ' + testCaseIndex + ' } : ' + e;
+        console.log(errMsg);
+        logError(errMsg);
         clearInterval(timer);
     }
 }
@@ -162,15 +162,15 @@ function getResizer(axisCell, axisClass) {
 }
 
 function captureResizerData(axisClass, axisCell) {
-    let sheetDimensions = store.getState().sheetDimensions;
+    let tableDimensions = store.getState().tableDimensions;
     if (axisClass == 'AxisX') {
         let colNum = getResizerIndex(axisClass, axisCell);
         let cellWidth = parseInt(axisCell.style.width, 10);
-        return getResizableColData(colNum, cellWidth, sheetDimensions.tableWidth)
+        return getResizableColData(colNum, cellWidth, tableDimensions.width)
     } else {
         let rowNum = getResizerIndex(axisClass, axisCell);
         let cellHeight = parseInt(axisCell.style.height, 10);
-        return getResizableRowData(rowNum, cellHeight, sheetDimensions.tableHeight);
+        return getResizableRowData(rowNum, cellHeight, tableDimensions.height);
     }
 }
 
@@ -190,7 +190,7 @@ function expectedTableChanges(axisClass, dimensionsBeforeMove, dimensionsAfterMo
                 let beforeStyleMap = data.getStyleMap();
                 let afterStyleMap = dataAfter.getStyleMap();
                 if (beforeStyleMap.size != 1 || afterStyleMap.size != 1) throw entryKey + ' should not have multiple styleMap entries'
-                if (entryKey == 'spreadsheet') {
+                if (entryKey == 'table') {
                     if (beforeStyleMap.get('width') == null || afterStyleMap.get('width') == null) throw entryKey + ' is missing property "width"';
                     if (beforeStyleMap.get('width') + delta != afterStyleMap.get('width')) throw entryKey + ' width not updated properly';
                 } else if (!/.col\d+/.test(entryKey)) {
@@ -246,7 +246,7 @@ function expectedChangeHistoryChanges(axisClass, delta, changeHistoryBeforeMove,
             for (const [property, val] of value.getStyleMap().entries()) {
                 if (valueAfterMoveStyleMap.get(property) !== val) throw 'valueAfterMove does not preserve styleMap pairs of value';
             }
-            if (!/.col\d+/.test(entryKey) && entryKey !== 'spreadsheet' && value.getRow() != valueAfterMove.getRow()) throw 'valueAfterMove does not preserve row of value';
+            if (!/.col\d+/.test(entryKey) && entryKey !== 'table' && value.getRow() != valueAfterMove.getRow()) throw 'valueAfterMove does not preserve row of value';
             else if (/.col\d+/.test(entryKey) && (value.getCellRow() != valueAfterMove.getCellRow()
                 || value.getCellCol() != valueAfterMove.getCellCol()
                 || value.getVal() != valueAfterMove.getVal())) throw 'valueAfterMove does not preserve cellRow/cellCol/val of value';
@@ -281,16 +281,4 @@ function expectedChangeHistoryChanges(axisClass, delta, changeHistoryBeforeMove,
     }
 }
 
-function logSuccess(totalTestCases) {
-    document.querySelector('#testConsoleLog').innerHTML = document.querySelector('#testConsoleLog').innerHTML + `,resizersTest(): ${totalTestCases}/${totalTestCases} PASS`;
-    let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
-    document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' NEXT';
-}
-
-function logError(testCaseIndex, e) {
-    document.querySelector('#testConsoleError').innerHTML = 'Err: resizersTest(): { testCaseIndex: ' + testCaseIndex + ' } : ' + e;
-    let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
-    document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' FAIL';
-}
-
-export { resizersTests, checkReactionOfResizingOnTable };
+export { resizersTests, checkReactionOfResizing };

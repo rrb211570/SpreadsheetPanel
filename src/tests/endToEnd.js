@@ -1,4 +1,4 @@
-import { checkReactionOfResizingOnTable } from "../components/TablePanel/handlers/resizingHandler/test";
+import { checkReactionOfResizing } from "../components/TablePanel/handlers/resizingHandler/test";
 import { checkReactionOfTextChange } from "../components/TablePanel/handlers/cellHandler/textChangeHandler/test";
 import { validateSequence, checkReactionOfKeyInput } from "../components/SpreadSheetPanel/handlers/keyboardEvents/test";
 import { checkReactionOfSingleClickSelection, checkReactionOfDoubleClickSelection } from "../components/TablePanel/handlers/cellHandler/selectionHandler/test";
@@ -41,8 +41,8 @@ function endToEnd(atomicTurn) {
             let chosenCells = [];
             if (resizeEvents[i][0] == X_AXIS) resizeEvents[i][1].map(cellNum => chosenCells.push(axisCellsX[cellNum]))
             else if (resizeEvents[i][0] == Y_AXIS) resizeEvents[i][1].map(cellNum => chosenCells.push(axisCellsY[cellNum]))
-            if (i == 0) checkReactionOfResizingOnTable(i + 1, [chosenCells, resizeEvents[i][2]], atomicTurn, true, resizeEvents.length);
-            else checkReactionOfResizingOnTable(i + 1, [chosenCells, resizeEvents[i][2]], atomicTurn, false, resizeEvents.length);
+            if (i == 0) checkReactionOfResizing(i + 1, [chosenCells, resizeEvents[i][2]], atomicTurn, true, resizeEvents.length);
+            else checkReactionOfResizing(i + 1, [chosenCells, resizeEvents[i][2]], atomicTurn, false, resizeEvents.length);
         }
         keyInputTestCaseIndex = 1;
         keyState = new Set();

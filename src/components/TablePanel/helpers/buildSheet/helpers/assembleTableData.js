@@ -1,23 +1,14 @@
-function assembleTableData(loadedSheet, defaultRows, defaultCols, defaultCellHeight, defaultCellWidth) {
-    let [rows, cols] = loadRowsCols(loadedSheet, defaultRows, defaultCols);
+function assembleTableData(loadedSheet, rows, cols, defaultCellHeight, defaultCellWidth) {
     let tableData = createEmptyTable(rows, cols);
     loadTableData(loadedSheet, tableData, rows, cols, defaultCellHeight, defaultCellWidth);
     return tableData;
 }
 
-function loadRowsCols(loadedSheet, defaultRows, defaultCols) {
-    if (loadedSheet != null && loadedSheet.hasOwnProperty('data')) {
-        return [parseInt(loadedSheet.rows, 10), parseInt(loadedSheet.cols, 10)];
-    } else return [defaultRows, defaultCols];
-}
-
 function createEmptyTable(rows, cols) {
-    rows++; // increment to include axis cells
-    cols++;
     let tableData = [];
     for (let i = 0; i < rows; ++i) {
         let emptyRow = [];
-        for (let i = 0; i < cols; ++i) emptyRow.push({});
+        for (let j = 0; j < cols; ++j) emptyRow.push({});
         tableData.push(emptyRow);
     }
     return tableData;
@@ -100,15 +91,14 @@ function updateMarginLeftInStyleMap(styleMap, dx) {
 
 // apply default value, height, and width
 function applyDefaults(tableData, rows, cols, defaultCellHeight, defaultCellWidth) {
-    for (let i = 0; i < rows + 1; ++i) {
-        for (let j = 0; j < cols + 1; ++j) {
+    for (let i = 0; i < rows; ++i) {
+        for (let j = 0; j < cols; ++j) {
             let entry = tableData[i][j];
-            if (i > 0 && j > 0 && !entry.hasOwnProperty('val')) entry.val = '';
+            if (!entry.hasOwnProperty('val')) entry.val = '';
             if (!entry.hasOwnProperty('styleMap')) {
                 entry.styleMap = [];
                 entry.styleMap.push(['height', defaultCellHeight]);
-                if (j == 0) entry.styleMap.push(['width', defaultCellWidth / 2]);
-                else if (j > 0) entry.styleMap.push(['width', defaultCellWidth]);
+                entry.styleMap.push(['width', defaultCellWidth]);
             } else {
                 let heightPair = entry.styleMap.filter(pair => pair[0] == 'height');
                 let widthPair = entry.styleMap.filter(pair => pair[0] == 'width');
@@ -122,8 +112,8 @@ function applyDefaults(tableData, rows, cols, defaultCellHeight, defaultCellWidt
 
 function calculateAndApplyMarginLefts(tableData, rows, cols) {
     let margins = getTopAxisMargins(tableData);
-    for (let i = 0; i < rows + 1; ++i) {
-        for (let j = 0; j < cols + 1; ++j) {
+    for (let i = 0; i < rows; ++i) {
+        for (let j = 0; j < cols; ++j) {
             let entry = tableData[i][j];
             entry.styleMap.push(['marginLeft', margins[j]]);
             tableData[i][j] = entry;

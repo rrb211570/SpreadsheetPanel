@@ -1,4 +1,5 @@
 import { store } from '../../../../store/store.js'
+import { logError, logSuccess } from '../../../../tests/helper.js';
 import { getInLine, nextTurn } from '../../../../tests/sequenceHelpers.js'
 import { DOWN, CONTROL, META, SHIFT, Z, Y, UNDO_DISPATCH, UNDO_FINISH, REDO_DISPATCH, REDO_FINISH, FLUFF_FULL } from './keyMacros.js'
 const UNDO = 'Undo';
@@ -63,15 +64,16 @@ function checkReactionOfKeyInput(testCaseIndex, keyEvent, keyState, atomicTurn, 
                         console.log('-------------- Event: ' + predictedKeyOutcome);
                         compareStoreAndDOM(predictedKeyOutcome, predictedChange);
                     }
-                    if (testCaseIndex == totalTestCases) logSuccess(totalTestCases);
+                    if (testCaseIndex == totalTestCases) logSuccess('keyInputTest()', totalTestCases);
                     nextTurn(atomicTurn);
                     clearInterval(timer);
                     break;
                 default: break;
             }
         } catch (e) {
-            console.log('Error: ' + e);
-            logError(testCaseIndex, e);
+            let errMsg = 'Err: checkReactionOfKeyInput(): { testCaseIndex: ' + testCaseIndex + ' } : ' + e;
+            console.log(errMsg);
+            logError(errMsg);
             nextTurn(atomicTurn);
             clearInterval(timer);
         }
@@ -261,18 +263,6 @@ function compareGroup(group, styleMap) {
             }
         }
     }
-}
-
-function logSuccess(totalTestCases) {
-    document.querySelector('#testConsoleLog').innerHTML = document.querySelector('#testConsoleLog').innerHTML + `,keyInputTest(): ${totalTestCases}/${totalTestCases} PASS`;
-    let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
-    document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' NEXT';
-}
-
-function logError(testCaseIndex, e) {
-    document.querySelector('#testConsoleError').innerHTML = 'Err: keyInputTest(): { testCaseIndex: ' + testCaseIndex + ' } : ' + e;
-    let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
-    document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' FAIL';
 }
 
 export { keyInputTest, checkReactionOfKeyInput, validateSequence };

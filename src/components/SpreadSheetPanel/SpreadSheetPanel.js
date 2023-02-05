@@ -1,6 +1,5 @@
 import TestConsolePanel from '../TestConsolePanel/TestConsolePanel.js';
 import React from 'react';
-import { Provider, connect } from 'react-redux'
 import { batchTurn, testSequence } from '../../tests/sequenceHelpers.js';
 
 import unitTest from './tests/unitTest.js';
@@ -9,33 +8,38 @@ import { loadSheetAPI, saveAPI } from './helpers/API.js';
 import { keyPressed, keyUpped } from './handlers/keyboardEvents/keyboardEvents.js';
 
 import TablePanel from '../TablePanel/TablePanel.js'
-import { store, mapStateToProps, mapDispatchToProps } from './../../store/store.js'
-import { setSheetDimensions } from './../../store/reducers/sheetDimensionsSlice.js'
-import { buildSheet } from '../TablePanel/helpers/buildSheet/buildSheet.js';
+import FormatPanel from '../FormatPanel/FormatPanel.js';
 
-class MainPanel extends React.Component {
+import './SpreadSheetPanel.css'
+import CellViewPanel from '../CellViewPanel/CellViewPanel.js';
+
+let loadedSheet = null; // our only global variable
+
+class SpreadSheetPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             sheetID: null, // get_URL_parameter(id)
-            loadedSheet: null,
             autoSaveTimer: null,
+            title: 'Untitled'
         }
         this.setAutoSaveInterval = this.setAutoSaveInterval.bind(this);
         this.hasSavePayload = this.hasSavePayload.bind(this);
     }
+
     render() {
         return (
-            <div className="content" id="contentID" style={{ height: window.innerHeight * .95, width: '100%' }}>
+            <div className="content" id="contentID" style={{ height: parseInt(window.innerHeight, 10) - 66 + 'px', width: '100%' }}>
                 <TestConsolePanel />
                 <div id='spreadsheet' tabIndex='-1' onKeyDown={keyPressed} onKeyUp={keyUpped}>
-                    <TablePanel loadedSheet={this.state.loadedSheet} rows={this.props.rows} cols={this.props.cols} rowHeight={this.props.rowHeight} colWidth={this.props.colWidth} />
+                    <FormatPanel />
+                    <CellViewPanel />
+                    <TablePanel rows={this.props.rows} cols={this.props.cols} rowHeight={this.props.rowHeight} colWidth={this.props.colWidth} />
                 </div>
             </div>
         );
     }
     componentDidMount() {
-        console.log(this.props);
         if (this.props.storageURL != null) {
             loadSheetAPI(this.state.sheetID, this.props.storageURL)
                 .then(res => {
@@ -43,9 +47,9 @@ class MainPanel extends React.Component {
                     if (res.status == 'success') {
                         let autoSaveInterval = this.setAutoSaveInterval();
                         this.setState({
-                            loadedSheet: res,
                             autoSaveInterval: autoSaveInterval,
                         })
+                        loadedSheet = res;
                         document.querySelector('#back').removeAttribute('disabled');
                         document.querySelector('#logout').removeAttribute('disabled');
                     } else {
@@ -74,10 +78,9 @@ class MainPanel extends React.Component {
                 clearInterval(timer2);
             }
         })
-
     }
-    shouldComponentUpdate() { // prevent unnecessary re-renders on changes to Redux store
-        return false;
+    shouldComponentUpdate() {
+        return false; // prevent re-renders from changes to Redux
     }
     setAutoSaveInterval() {
         return setInterval(() => {
@@ -102,21 +105,5 @@ class MainPanel extends React.Component {
         return [...this.props.collectedData.getIndividualEntries()].length != 0 ||
             [...this.props.collectedData.getGroupEntries()].length != 0;
     }
-}
-
-const MainContainer = connect(mapStateToProps, mapDispatchToProps)(MainPanel);
-function SpreadSheetPanel(defaultRows, defaultCols, defaultRowHeight, defaultColWidth, storageURL) {
-
-    const tableHeight = (defaultRows + 1) * defaultRowHeight;
-    const tableWidth = (defaultCols * defaultColWidth) + (defaultColWidth / 2);
-    store.dispatch(setSheetDimensions({ tableHeight, tableWidth }));
-
-    return (
-        <div>
-            <Provider store={store}>
-                <MainContainer rows={defaultRows} cols={defaultCols} rowHeight={defaultRowHeight} colWidth={defaultColWidth} storageURL={storageURL} />
-            </Provider>
-        </div>
-    )
 }
 export default SpreadSheetPanel;

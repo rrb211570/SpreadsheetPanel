@@ -1,3 +1,4 @@
+import { logError, logSuccess } from '../../../../../tests/helper.js';
 import { getInLine, nextTurn } from '../../../../../tests/sequenceHelpers.js'
 import { store } from './../../../../../store/store.js'
 
@@ -23,7 +24,7 @@ function selectionTest(atomicTurn) {
 
 function checkReactionOfSingleClickSelection(testCaseIndex, testDetails, atomicTurn, isFirstCall, totalTestCases) {
     let [rowNum, colNum] = testDetails;
-    let cell = document.querySelector(`.row${rowNum}.col${colNum} .selectionLayer`);
+    let cell = document.querySelector(`.row${rowNum}.col${colNum} .coverDiv`);
     let myTurnNumber = getInLine(atomicTurn);
     let stage = WAIT_IN_QUEUE;
     let prevSelectionEntries;
@@ -51,14 +52,15 @@ function checkReactionOfSingleClickSelection(testCaseIndex, testDetails, atomicT
                 case ASSERT:
                     compareStoreAndDOM_singleClick(prevSelectionEntries, expectedSelectionEntries);
                     console.log('selection (single click) affects store and DOM correctly');
-                    if (testCaseIndex == totalTestCases) logSuccess(totalTestCases);
+                    if (testCaseIndex == totalTestCases) logSuccess('singleClickSelectionTest', totalTestCases);
                     nextTurn(atomicTurn);
                     clearInterval(timer);
                     break;
             }
         } catch (e) {
-            console.log('checkReactionOfSelection(): ' + e);
-            logError(testCaseIndex, rowNum, colNum, e);
+            let errMsg = 'Err: checkReactionOfSingleClickSelection(): { testCaseIndex: ' + testCaseIndex + ' } : ' + e;
+            console.log(errMsg);
+            logError(errMsg);
             clearInterval(timer);
         }
     }, 200);
@@ -66,7 +68,7 @@ function checkReactionOfSingleClickSelection(testCaseIndex, testDetails, atomicT
 
 function checkReactionOfDoubleClickSelection(testCaseIndex, testDetails, atomicTurn, isFirstCall, totalTestCases) {
     let [rowNum, colNum] = testDetails;
-    let cell = document.querySelector(`.row${rowNum}.col${colNum} .selectionLayer`);
+    let cell = document.querySelector(`.row${rowNum}.col${colNum} .coverDiv`);
     let myTurnNumber = getInLine(atomicTurn);
     let stage = WAIT_IN_QUEUE;
     let prevSelectionEntries;
@@ -102,15 +104,16 @@ function checkReactionOfDoubleClickSelection(testCaseIndex, testDetails, atomicT
                 case ASSERT_DOUBLE_CLICK:
                     compareStoreAndDOM_doubleClick(prevSelectionEntries, expectedSelectionEntries);
                     console.log('selection (double click) affects store and DOM correctly');
-                    if (testCaseIndex == totalTestCases) logSuccess(totalTestCases);
+                    if (testCaseIndex == totalTestCases) logSuccess('doubleClickSelectionTest', totalTestCases);
                     nextTurn(atomicTurn);
                     clearInterval(timer);
                     break;
                 default: break;
             }
         } catch (e) {
-            console.log('checkReactionOfDoubleClickSelection(): ' + e);
-            logError(testCaseIndex, rowNum, colNum, e);
+            let errMsg = 'Err: checkReactionOfDoubleClickSelection(): { testCaseIndex: ' + testCaseIndex + ' } : ' + e;
+            console.log(errMsg);
+            logError(errMsg);
             clearInterval(timer);
         }
     }, 200);
@@ -129,7 +132,7 @@ function compareStoreAndDOM_doubleClick(prevSelectionEntries, expectedSelectionE
     assertCurrentSelectionEqualsExpectedSelection(currentSelectionEntries, expectedSelectionEntries);
     let setDifference = getSetDifference(prevSelectionEntries, currentSelectionEntries);
     assertSetDifferenceClearedOfHighlights(setDifference);
-    assertCurrentSelectionClearedOfHighlights(currentSelectionEntries); // different here
+    assertCurrentSelectionHighlighted(currentSelectionEntries); // different here
 }
 
 function assertCurrentSelectionEqualsExpectedSelection(currentSelectionEntries, expectedSelectionEntries) {
@@ -153,8 +156,8 @@ function assertSetDifferenceClearedOfHighlights(setDifference) {
     for (const entry of setDifference.values()) {
         let rowNum = parseInt(entry.split(',')[0], 10);
         let colNum = parseInt(entry.split(',')[1], 10);
-        let highlightLayer = document.querySelector(`.row${rowNum}.col${colNum} .highlightLayer`);
-        if (highlightLayer.style.border != 'medium none') throw 'compareStoreAndDOM(): prevSelectedCell not cleared of highlight: ' + rowNum + ' ' + colNum;
+        let highlightLayer = document.querySelector(`.row${rowNum}.col${colNum} .coverDiv`);
+        if (highlightLayer.style.boxShadow != 'none') throw 'compareStoreAndDOM(): prevSelectedCell not cleared of highlight: ' + rowNum + ' ' + colNum;
     }
 }
 
@@ -162,30 +165,9 @@ function assertCurrentSelectionHighlighted(currentSelectionEntries) {
     for (const entry of currentSelectionEntries.values()) {
         let rowNum = parseInt(entry.split(',')[0], 10);
         let colNum = parseInt(entry.split(',')[1], 10);
-        let highlightLayer = document.querySelector(`.row${rowNum}.col${colNum} .highlightLayer`);
-        if (highlightLayer.style.border != '2px solid blue') throw 'compareStoreAndDOM(): currentSelectionEntry not highlighted properly ' + rowNum + ' ' + colNum;
+        let highlightLayer = document.querySelector(`.row${rowNum}.col${colNum} .coverDiv`);
+        if (highlightLayer.style.boxShadow != 'blue 0px 0px 0px 2px inset') throw 'compareStoreAndDOM(): currentSelectionEntry not highlighted properly ' + rowNum + ' ' + colNum;
     }
-}
-
-function assertCurrentSelectionClearedOfHighlights(currentSelectionEntries) {
-    for (const entry of currentSelectionEntries.values()) {
-        let rowNum = parseInt(entry.split(',')[0], 10);
-        let colNum = parseInt(entry.split(',')[1], 10);
-        let highlightLayer = document.querySelector(`.row${rowNum}.col${colNum} .highlightLayer`);
-        if (highlightLayer.style.border != 'medium none') throw 'compareStoreAndDOM(): currentSelectedCell not cleared of highlight: ' + rowNum + ' ' + colNum;
-    }
-}
-
-function logSuccess(totalTestCases) {
-    document.querySelector('#testConsoleLog').innerHTML = document.querySelector('#testConsoleLog').innerHTML + `,selectionTest(): ${totalTestCases}/${totalTestCases} PASS`;
-    let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
-    document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' NEXT';
-}
-
-function logError(testCaseIndex, rowNum, colNum, e) {
-    document.querySelector('#testConsoleError').innerHTML = 'Err: selectionTest(): { testCaseIndex: ' + testCaseIndex + ', rowNum: ' + rowNum + ', colNum: ' + colNum + ' } : ' + e;
-    let testNum = document.querySelector('#testConsoleStatus').innerHTML.match(/(\d+)/)[0];
-    document.querySelector('#testConsoleStatus').innerHTML = parseInt(testNum, 10) + 1 + ' FAIL';
 }
 
 export { selectionTest, checkReactionOfSingleClickSelection, checkReactionOfDoubleClickSelection };
