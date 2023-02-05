@@ -1,0 +1,24 @@
+#body{
+    height: 100vh;
+    width: 100vw;
+}
+
+#body__header{
+    position: fixed;
+    height: 65px;
+    width: 100vw;
+    display: flex;
+    background-color: white;
+    border-bottom: 1px solid lightgray;
+    z-index: 5;
+}
+
+#body__logo{
+    padding: 10px;
+}
+
+#body__titleAndMenuBar{
+    height: 65px;
+    display: flex;
+    flex-direction: column;
+}

@@ -1,0 +1,23 @@
+.italic {
+    width: 26px;
+    height: 26px;
+}
+
+.italic__btn {
+    width: 26px;
+    height: 26px;
+    padding: 2px 3px 2px 0px;
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.italic__btn:hover {
+    background-color: rgb(235, 235, 235);
+}
+
+#italic__icon {
+    font-size: 1.1rem;
+    font-style: italic;
+    margin: 0;
+}

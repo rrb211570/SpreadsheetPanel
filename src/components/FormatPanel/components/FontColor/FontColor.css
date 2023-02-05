@@ -1,0 +1,55 @@
+.fontColor {
+    width: 26px;
+    height: 26px;
+}
+
+.fontColor__btn {
+    width: 26px;
+    height: 26px;
+    padding: 0px 3px 2px 3px;
+    border-radius: 5px;
+    background-color: white;
+    border: none;
+}
+
+.fontColor__btn * {
+    pointer-events: none
+}
+
+.fontColor__btn:hover {
+    background-color: rgb(235, 235, 235);
+}
+
+.fontColor__btnDiv {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.fontColor__colorBar {
+    width: 100%;
+    height: 4px;
+}
+
+.fontColor__colorGrid {
+    position: absolute;
+    padding: 5px;
+    background-color: white;
+    z-index: -1;
+    opacity: 0;
+    box-shadow: 0 5px 5px -1px lightgray, 5px 0 5px -1px lightgray, -5px 0 5px -1px lightgray;
+    pointer-events: none;
+}
+
+.fontColor__colorSquareBtn {
+    width: 20px;
+    height: 20px;
+    border: none;
+    padding: 2px;
+    background-color: white;
+}
+
+.fontColor__colorSquareBtn:hover {
+    background-color: rgb(235, 235, 235);
+}

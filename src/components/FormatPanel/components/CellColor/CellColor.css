@@ -1,0 +1,55 @@
+.cellColor {
+    width: 26px;
+    height: 26px;
+}
+
+.cellColor__btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 5px;
+    padding: 0px 3px 1.5px 3px;
+    background-color: white;
+    border: none;
+}
+
+.cellColor__btn * {
+    pointer-events: none
+}
+
+.cellColor__btn:hover {
+    background-color: rgb(235, 235, 235);
+}
+
+.cellColor__btnDiv {
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.cellColor__colorBar {
+    width: 100%;
+    height: 4px;
+}
+
+.cellColor__colorGrid {
+    position: absolute;
+    padding: 5px;
+    background-color: white;
+    z-index: -1;
+    opacity: 0;
+    box-shadow: 0 5px 5px -1px lightgray, 5px 0 5px -1px lightgray, -5px 0 5px -1px lightgray;
+    pointer-events: none;
+}
+
+.cellColor__colorSquareBtn {
+    width: 20px;
+    height: 20px;
+    border: none;
+    padding: 2px;
+    background-color: white;
+}
+
+.cellColor__colorSquareBtn:hover {
+    background-color: rgb(235, 235, 235);
+}

@@ -1,0 +1,23 @@
+.bold {
+    width: 26px;
+    height: 26px;
+}
+
+.bold__btn {
+    width: 26px;
+    height: 26px;
+    padding: 2px;
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.bold__btn:hover {
+    background-color: rgb(235, 235, 235);
+}
+
+#bold__icon {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+}

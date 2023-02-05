@@ -1,0 +1,86 @@
+.horizontalAlignment {
+    position: relative;
+    width: 26px;
+    height: 26px;
+}
+
+.horizontalAlignment__btn {
+    width: 26px;
+    height: 26px;
+    padding: 2px;
+    background-color: white;
+    border-radius: 5px;
+    border: none;
+}
+
+.horizontalAlignment__btn * {
+    pointer-events: none;
+}
+
+.horizontalAlignment__btn:hover {
+    background-color: rgb(235, 235, 235);
+}
+
+.horizontalAlignment__icon_left{
+    width: 26px;
+    height: 26px;
+    padding: 3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+.horizontalAlignment__icon_center{
+    width: 26px;
+    height: 26px;
+    padding: 3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.horizontalAlignment__icon_right{
+    width: 26px;
+    height: 26px;
+    padding: 3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-end;
+}
+
+.horizontalAlignment__icon * {
+    pointer-events: none;
+}
+
+.horizontalAlignment__icon:hover {
+    background-color: rgb(235, 235, 235);
+}
+
+.horizontalAlignment__iconLine {
+    height: 2px;
+    margin: 0px;
+    padding: 0px;
+    background-color: gray;
+}
+
+.horizontalAlignment__iconLine_long {
+    width: 16px;
+}
+
+.horizontalAlignment__iconLine_short {
+    width: 12px;
+}
+
+.horizontalAlignment__options {
+    position: absolute;
+    padding: 5px;
+    display: flex;
+    background-color: white;
+    z-index: -1;
+    opacity: 0;
+    box-shadow: 0 5px 5px -1px lightgray, 5px 0 5px -1px lightgray, -5px 0 5px -1px lightgray;
+    pointer-events: none;
+}

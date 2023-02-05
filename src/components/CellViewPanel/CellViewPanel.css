@@ -1,0 +1,27 @@
+#cellViewPanel {
+    position: fixed;
+    height: 25px;
+    width: 100vw;
+    margin-top: 36px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ACACAC;
+    background-color: white;
+    z-index: 3;
+}
+
+#cellViewPanel__cellAddress {
+    margin: 0px 15px;
+    padding: 0;
+}
+
+#cellViewPanel__divider {
+    height: 18px;
+    margin: 0px 5px 0px 0px;
+    border-right: 1.5px solid lightgray;
+}
+
+#cellViewPanel__cellTextValue {
+    margin: 0px 5px;
+    font-size: 0.9rem;
+}

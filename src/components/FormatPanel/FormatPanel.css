@@ -1,0 +1,33 @@
+#formatPanel {
+    position: fixed;
+    height: 36px;
+    width: 100vw;
+    padding-left: min(65px, 5vw);
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid lightgray;
+    background-color: white;
+    z-index: 4;
+}
+
+.formatPanel__divider{
+    height: 20px;
+    margin: 0px 4px;
+    padding: 0px;
+    border-right: 1.5px solid lightgray;
+}
+
+.keyboardEventBtn{
+    height: 18px;
+    width: 18px;
+    padding: 4px;
+    border-radius: 5px;
+}
+
+.keyboardEventBtn:hover{
+    background-color: rgb(235, 235, 235);
+}
+
+.keyboardEventBtn.darken:hover{
+    background-color: gray;
+}

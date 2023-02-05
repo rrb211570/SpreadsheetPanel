@@ -1,0 +1,43 @@
+.borders {
+    width: 26px;
+    height: 26px;
+}
+
+.borders__btn {
+    width: 26px;
+    height: 26px;
+    padding: 2px;
+    display: grid;
+    place-items: center;
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.borders__btn * {
+    pointer-events: none
+}
+
+.borders__btn:hover {
+    background-color: rgb(235, 235, 235);
+}
+
+#borders__btnIcon {
+    width: 18px;
+    height: 18px;
+}
+
+.borders__options {
+    position: absolute;
+    padding: 5px;
+    background-color: white;
+    z-index: -1;
+    opacity: 0;
+    box-shadow: 0 5px 5px -1px lightgray, 5px 0 5px -1px lightgray, -5px 0 5px -1px lightgray;
+    pointer-events: none;
+}
+
+.borders__options>p {
+    margin: 0;
+    font-family: 'Century Gothic';
+}

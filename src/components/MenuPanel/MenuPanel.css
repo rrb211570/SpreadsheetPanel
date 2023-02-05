@@ -1,0 +1,35 @@
+#menuPanel{
+    position: relative;
+    height: 20px;
+    display: flex;
+}
+
+.menuPanel__button{
+    padding: 0 5px;
+    border-radius: 5px;
+    background-color: white;
+    border: none;
+    font-family: Calibri;
+    font-size: 1rem;
+    user-select: none;
+}
+
+#menuPanel__dropdown{
+    position: absolute;
+    top: 20px;
+    width: 200px;
+    background-color: white;
+    border: 1px solid gray;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    z-index: -1;
+}
+
+.menuPanel__dropdownOption{
+    background-color: white;
+    color: lightgray;
+    border: none;
+    text-align: left;
+    user-select: none;
+}

@@ -1,0 +1,126 @@
+#tableDiv {
+    position: relative;
+    width: 100vw;
+    height: calc(100vh - 66px - 35px - 26px - 38px - 24px);
+    margin-top: 60px;
+    overflow: hidden;
+    z-index: 2
+}
+
+#axisX {
+    width: calc(100vw - 50px - 18px);
+}
+
+#axisY {
+    height: calc(502px - 18px);
+    margin-top: 22px;
+}
+
+.AxisX,
+.origin {
+    position: absolute;
+    box-shadow: inset -0.5px -0.5px 0 0.5px #ACACAC;
+    background-color: #EFEFEF;
+    color: #5F5F5F;
+    margin: 0;
+    text-align: center;
+    z-index: 1;
+}
+
+.AxisY {
+    position: relative;
+    box-shadow: inset -0.5px -0.5px 0 0.5px #ACACAC;
+    background-color: #EFEFEF;
+    color: #5F5F5F;
+    margin: 0;
+    text-align: center;
+    z-index: 1;
+}
+
+#tableEntryCellsWindow {
+    position: absolute;
+    width: calc(100% - 50px);
+    height: calc(100% - 22px);
+    margin-left: 50px;
+    margin-top: 22px;
+    overflow: auto;
+}
+
+.entryCell {
+    position: absolute;
+    border: 0.5px solid #D5D5D5;
+    background-color: white;
+    text-align: center;
+    overflow: hidden;
+}
+
+.cellInput {
+    position: absolute;
+    height: 100%;
+    width: calc(100% - 8px);
+    max-height: calc(100% - 6px);
+    left: 2px;
+    margin-top: 2px;
+    text-align: center;
+    border: none;
+    font-family: 'Calibri';
+    opacity: 0;
+}
+
+.cellValueDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.cellValue {
+    position: absolute;
+    width: calc(100% - 8px);
+    margin: 0;
+    padding: 4px 4px;
+    font-family: 'Calibri';
+    font-size: 12px;
+    line-height: 1;
+}
+
+.coverDiv {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    border: none;
+    z-index: 2;
+    opacity: 0.5;
+}
+
+.resizer-horizontal {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 5px;
+    cursor: col-resize;
+    user-select: none;
+}
+
+.resizer-vertical {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    vertical-align: bottom;
+    height: 5px;
+    cursor: row-resize;
+    user-select: none;
+}
+
+.resizing-horizontal {
+    border-right: 2px solid blue;
+    z-index: 2;
+}
+
+.resizing-vertical {
+    border-bottom: 2px solid blue;
+    z-index: 2;
+}
