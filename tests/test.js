@@ -6,7 +6,7 @@ myOptions.addArguments("--headless");
 
 (async function example() {
     try {
-        let testNum = 1;
+        let testNum = 0; // 0 if no tests are run, else 1
         let driver = await new Builder()
             .forBrowser('firefox')
             .setFirefoxOptions(myOptions)
