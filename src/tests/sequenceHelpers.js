@@ -10,24 +10,24 @@
 let testSequence = new Map([
     ['TablePanel', {
         turnNumber: 1,
-        tests: new Set(['BUILD_SHEET', 'SELECTION', 'TEXT_CHANGE', 'RESIZING'])
-    }],
-    ['SpreadSheetPanel', {
-        turnNumber: 5,
-        tests: new Set([/*'KEY_INPUT'*/])
-    }],
-    ['MenuPanel', {
-        turnNumber: 3,
-        tests: new Set([/*'MENU_INTERACTION'*/])
+        tests: new Set([/*'BUILD_SHEET', 'SELECTION', 'TEXT_CHANGE', 'RESIZING'*/])
     }],
     ['FormatPanel', {
         turnNumber: 2,
-        tests: new Set(['BOLD', 'ITALIC', 'STRIKETHROUGH', 'FONT_FAMILY', 'FONT_SIZE', 'FONT_COLOR', 'CELL_COLOR', 'BORDERS', 'HORIZONTAL_ALIGNMENT', 'VERTICAL_ALIGNMENT'])
+        tests: new Set([/*'FONT_SIZE', 'FONT_FAMILY', 'BOLD', 'ITALIC', 'STRIKETHROUGH', 'FONT_COLOR', 'CELL_COLOR', 'BORDERS', 'HORIZONTAL_ALIGNMENT', 'VERTICAL_ALIGNMENT'*/])
+    }],
+    ['SpreadSheetPanel', {
+        turnNumber: 3,
+        tests: new Set([/*'KEY_INPUT'*/])
     }],
     ['App', {
         turnNumber: 4,
         tests: new Set([/*'END_TO_END'*/])
-    }]
+    }],
+    ['MenuPanel', {
+        turnNumber: 5,
+        tests: new Set([/*'MENU_INTERACTION'*/])
+    }],
 ]);
 
 let batchTurn = { current: 1 };

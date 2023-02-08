@@ -11,7 +11,7 @@ const NO_CHANGE = 'No Change';
 
 // Handle CTRL+Z/Y (undo/redo) and CTRL/SHIFT selections.
 function keyPressed(e) {
-    console.log(e.key.padStart(7, ' ') + ' DOWN');
+    //console.log(e.key.padStart(7, ' ') + ' DOWN');
     let deleteThisVariable;
     switch (store.getState().keyboardEvents.inputMode) {
         case NO_COMMAND:
@@ -37,7 +37,7 @@ function keyPressed(e) {
     }
 }
 function keyUpped(e) {
-    console.log(e.key.padStart(7, ' ') + ' UP');
+    //console.log(e.key.padStart(7, ' ') + ' UP');
     switch (store.getState().keyboardEvents.inputMode) {
         case NO_COMMAND:
             store.dispatch(trackEvent({ outcome: NO_CHANGE }))

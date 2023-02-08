@@ -11,7 +11,7 @@ const ACTION_CHANGE_CELL_COLOR = 2;
 const ASSERT = 3;
 
 function cellColorTest(turn) {
-    let changes = [[4, 5, '#f9a8d4'], [1, 2, '#d8b4fe'], [3, 7, '#bbf7d0'], [8, 2, '#fef08a'], [2, 4, '#cbd5e1']];
+    let changes = [[4, 5, '#f9a8d4'], [1, 2, '#d8b4fe'], [3, 7, '#bbf7d0'], [8, 2, '#fef08a'], [2, 4, '#cbd5e1'],[5,1,'#a3e635'],[7,7,'#3b82f6'],[1,8,'#fef08a']];
     if (changes.length > 0) checkReactionOfCellColor(1, changes[0], turn, true, changes.length);
     for (let i = 1; i < changes.length; ++i) checkReactionOfCellColor(i + 1, changes[i], turn, false, changes.length);
 }

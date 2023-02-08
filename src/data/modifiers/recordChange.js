@@ -1,13 +1,13 @@
 import Data from '../data.js';
 import updateCollectedData from './updateCollectedData.js';
-import {store} from '../../store/store.js'
-import {newHistoryState} from '../../store/reducers/historySlice.js'
+import { store } from '../../store/store.js'
+import { newHistoryState } from '../../store/reducers/historySlice.js'
 
 function recordChange(dataBeforeChange, dataAfterChange) {
     let history = store.getState().history;
     let prevRecordedData = updatePrevRecordedData(history.changeHistory[history.changeHistoryIndex], dataBeforeChange);
     let updatedCollectedData = updateCollectedData(dataAfterChange, history.collectedData);
-    store.dispatch(newHistoryState({prevRecordedData, dataAfterChange, collectedData: updatedCollectedData}));
+    store.dispatch(newHistoryState({ prevRecordedData, dataAfterChange, collectedData: updatedCollectedData }));
 }
 function updatePrevRecordedData(prevData, dataBeforeChange) {
     let updatedPrevData = new Data();

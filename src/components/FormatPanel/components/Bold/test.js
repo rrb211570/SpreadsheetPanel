@@ -9,7 +9,7 @@ const ACTION_TOGGLE_BOLD = 2;
 const ASSERT = 3;
 
 function boldTest(turn) {
-    let changes = [[4, 5], [1, 2], [3, 7], [8, 2], [2, 4]];
+    let changes = [[4, 5], [1, 2], [3, 2], [4, 3], [2, 4]];
     try {
         if (changes.length > 0) checkReactionOfBold(1, changes[0], turn, true, changes.length);
         for (let i = 1; i < changes.length; ++i) checkReactionOfBold(i + 1, changes[i], turn, false, changes.length);

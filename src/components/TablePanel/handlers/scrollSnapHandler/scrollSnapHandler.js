@@ -107,7 +107,6 @@ function wheelHandler(event) {
         document.querySelector('#tableEntryCellsWindow').addEventListener('scroll', scrollHandler);
     }, 500);
 
-    console.log('Wheel');
     //console.log('Wheel > curRow: ' + curRow + ' curCol: ' + curCol + ' newPosX: ' + newPosX + ' newPosY: ' + newPosY);
     updateTablePosition(newPosX, newPosY);
 }

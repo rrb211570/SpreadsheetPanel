@@ -10,7 +10,7 @@ const ACTION_CHANGE_HORIZONTAL_ALIGNMENT = 2;
 const ASSERT = 3;
 
 function horizontalAlignmentTest(turn) {
-    let changes = [[4, 5, 'left'], [1, 2, 'right'], [3, 7, 'center'], [8, 2, 'left'], [2, 4, 'right']];
+    let changes = [[4, 5, 'left'], [4, 3, 'right'], [3, 7, 'left'], [8, 2, 'left'], [2, 4, 'right'], [6, 9, 'right']];
     if (changes.length > 0) checkReactionOfHorizontalAlignment(1, changes[0], turn, true, changes.length);
     for (let i = 1; i < changes.length; ++i) checkReactionOfHorizontalAlignment(i + 1, changes[i], turn, false, changes.length);
 }
@@ -69,4 +69,4 @@ function checkReactionOfHorizontalAlignment(testCaseIndex, testDetails, turn, is
     }, 200);
 }
 
-export {  horizontalAlignmentTest, checkReactionOfHorizontalAlignment };
+export { horizontalAlignmentTest, checkReactionOfHorizontalAlignment };

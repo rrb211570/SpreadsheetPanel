@@ -9,7 +9,7 @@ const ACTION_TOGGLE_STRIKETHROUGH = 2;
 const ASSERT = 3;
 
 function strikethroughTest(turn) {
-    let changes = [[4, 5], [1, 2], [3, 7], [8, 2], [2, 4]];
+    let changes = [[4, 5], [5, 1], [4, 3], [6, 3], [6, 4], [7, 6], [8, 2]];
     try {
         if (changes.length > 0) checkReactionOfStrikethrough(1, changes[0], turn, true, changes.length);
         for (let i = 1; i < changes.length; ++i) checkReactionOfStrikethrough(i + 1, changes[i], turn, false, changes.length);

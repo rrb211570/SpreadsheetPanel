@@ -29,37 +29,37 @@ export const selectionSlice = createSlice({
             state.horizontalAlignment = action.payload.categories.horizontalAlignment;
             state.verticalAlignment = action.payload.categories.verticalAlignment;
         },
-        setFontFamily(state,action){
+        setFontFamily(state, action) {
             state.fontFamily = action.payload.fontFamily;
         },
-        setFontSize(state,action){
+        setFontSize(state, action) {
             state.fontSize = action.payload.fontSize;
         },
-        setFontWeight(state,action){
+        setFontWeight(state, action) {
             state.fontWeight = action.payload.fontWeight;
         },
-        setFontStyle(state,action){
+        setFontStyle(state, action) {
             state.fontStyle = action.payload.fontStyle;
         },
-        setTextDecoration(state,action){
+        setTextDecoration(state, action) {
             state.textDecoration = action.payload.textDecoration;
         },
-        setFontColor(state,action){
+        setFontColor(state, action) {
             state.fontColor = action.payload.fontColor;
         },
-        setCellColor(state,action){
+        setCellColor(state, action) {
             state.cellColor = action.payload.cellColor;
         },
-        setBorders(state,action){
+        setBorders(state, action) {
             state.borders = action.payload.borders;
         },
-        setHorizontalAlignment(state,action){
+        setHorizontalAlignment(state, action) {
             state.horizontalAlignment = action.payload.horizontalAlignment;
         },
-        setVerticalAlignment(state,action){
+        setVerticalAlignment(state, action) {
             state.verticalAlignment = action.payload.verticalAlignment;
         },
-        
+
     }
 })
 

@@ -11,7 +11,7 @@ const ACTION_CHANGE_FONT_COLOR = 2;
 const ASSERT = 3;
 
 function fontColorTest(turn) {
-    let changes = [[4, 5, '#ea580c'], [1, 2, '#16a34a'], [3, 7, '#1d4ed8'], [8, 2, '#c026d3'], [2, 4, '#db2777']];
+    let changes = [[4, 5, '#ea580c'], [1, 2, '#16a34a'], [3, 7, '#1d4ed8'], [8, 2, '#c026d3'], [2, 4, '#db2777'], [5, 1, '#3b82f6'], [1, 9, '#f97316'], [6, 3, '#fef08a'], [8, 8, '#16a34a']];
     if (changes.length > 0) checkReactionOfFontColor(1, changes[0], turn, true, changes.length);
     for (let i = 1; i < changes.length; ++i) checkReactionOfFontColor(i + 1, changes[i], turn, false, changes.length);
 }

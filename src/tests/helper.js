@@ -14,7 +14,7 @@ function compareDOM(selectedRowNum, selectedColNum, propertyObj) {
     } else if (alteredProperty == 'cellColor') {
         if (cellValueDiv.style.backgroundColor != alteredValue) throw 'compareDOM(): cellValueDiv[' + selectedRowNum + ',' + selectedColNum + '] not reflecting new ' + alteredProperty;
     } else if (alteredProperty == 'borders') {
-        if (cellValueDiv.style.boxShadow != alteredValue) throw 'compareDOM(): cellValueDiv[' + selectedRowNum + ',' + selectedColNum + '] not reflecting new ' + alteredProperty;
+        if (!cellValueDiv.style.boxShadow.includes(alteredValue)) throw 'compareDOM(): cellValueDiv[' + selectedRowNum + ',' + selectedColNum + '] not reflecting new ' + alteredProperty;
     } else if (alteredProperty == 'horizontalAlignment') {
         if (cellValue.style.textAlign != alteredValue) throw 'compareDOM(): cellValueDiv[' + selectedRowNum + ',' + selectedColNum + '] not reflecting new ' + alteredProperty;
     } else if (alteredProperty == 'verticalAlignment') {
@@ -38,15 +38,15 @@ function compareStore(selectedRowNum, selectedColNum, prevPropertyObj, propertyO
 }
 
 function assert_prevState(selectedRowNum, selectedColNum, prevPropertyObj, prevState, updatedPrevState) {
-    for (const [entryKey, data] of prevState.getIndividualEntries()) {
-        let prevStyleMap = data.getStyleMap();
-        let updatedPrevStyleMap = updatedPrevState.getIndividualEntry(entryKey).getStyleMap();
+    for (const [entryKey, data] of updatedPrevState.getIndividualEntries()) {
+        let updatedPrevStyleMap = data.getStyleMap();
+        let prevStyleMap = prevState.getIndividualEntry(entryKey) != undefined ? prevState.getIndividualEntry(entryKey).getStyleMap() : new Map();
         if (entryKey == 'table') assert_styles_unchanged(entryKey, prevStyleMap, updatedPrevStyleMap);
         else if (entryKey.match(/\.row\d+\.col\d+$/)) { // if cell
-            let prevText = data.getVal();
-            let updatedPrevText = updatedPrevState.getIndividualEntry(entryKey).getVal();
+            let updatedPrevText = data.getVal();
+            let prevText = prevState.getIndividualEntry(entryKey) != undefined ? prevState.getIndividualEntry(entryKey).getVal() : null;
             let [entryRowNum, entryColNum] = entryKey.match(/\.row(\d+)\.col(\d+)/).slice(1, 3);
-            if (entryRowNum != selectedRowNum && entryColNum != selectedColNum) assert_unrelatedCell_unchanged(entryKey, prevStyleMap, updatedPrevStyleMap, prevText, updatedPrevText);
+            if (entryRowNum != selectedRowNum || entryColNum != selectedColNum) assert_unrelatedCell_unchanged(entryKey, prevStyleMap, updatedPrevStyleMap, prevText, updatedPrevText);
             else assert_selectedCell(selectedRowNum, selectedColNum, prevPropertyObj, prevStyleMap, updatedPrevStyleMap, prevText, updatedPrevText);
         } else if (entryKey.match(/\.row\d+/) || entryKey.match(/\.col\d+/)) { // if row/col
             assert_styles_unchanged(entryKey, prevStyleMap, updatedPrevStyleMap);
@@ -66,7 +66,7 @@ function assert_selectedCell(selectedRowNum, selectedColNum, prevPropertyObj, pr
     for (const [prop, val] of updatedPrevStyleMap.entries()) {
         if (prop != prevProperty && prevStyleMap.get(prop) != val) throw 'compareStore(): unrelated stylePairs of entryKey[' + selectedRowNum + ',' + selectedColNum + '] should not be changed between prevStyleMap and updatedPrevStyleMap';
         if (prop == prevProperty) {
-            if (val != prevValue) throw 'compareStore(): updatedPrevStyleMap not reflecting prev ' + prevProperty;
+            if (val != prevValue) throw 'compareStore(): updatedPrevStyleMap not reflecting prev ' + prevProperty + ' ' + val + ' ' + prevValue;
             if (prevProperty != 'textValue') {
                 if (prevStyleMap.hasOwnProperty(prevProperty) && prevStyleMap.get(prevProperty) != prevValue) throw 'compareStore(): pre-existing ' + prevProperty + ' should not be changed from ' + prevStyleMap.get(prevProperty) + ' to ' + prevValue;
             } else {
@@ -92,7 +92,11 @@ function assert_currentState(entryKey, propertyObj, currentState) {
         if (cellOfCurrentState.getVal() != value) throw 'assert_currentState(): unexpected/missing value in current individualEntry';
     } else {
         if (cellOfCurrentState.getStyleMap().size != 1) throw 'assert_currentState(): unexpected/missing stylePair in current individualEntry';
-        if (cellOfCurrentState.getStyleMap().get(property) != value) throw 'assert_currentState(): new ' + property + ' not stored in currentState';
+        if (property != 'borders') {
+            if (cellOfCurrentState.getStyleMap().get(property) != value) throw 'assert_currentState(): new ' + property + ' not stored in currentState';
+        } else {
+            if (!cellOfCurrentState.getStyleMap().get(property).includes(value)) throw 'assert_currentState(): new ' + property + ' not stored in currentState';
+        }
     }
 }
 

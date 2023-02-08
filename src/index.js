@@ -5,8 +5,8 @@ import { BodyPanel } from './components'
 import reportWebVitals from './reportWebVitals';
 import { updateScrollDimensions } from './components/TablePanel/handlers/scrollSnapHandler/scrollSnapHandler';
 
-const DEFAULT_ROWS = 40;
-const DEFAULT_COLS = 16;
+const DEFAULT_ROWS = 100;
+const DEFAULT_COLS = 26;
 const DEFAULT_ROW_HEIGHT = 22;
 const DEFAULT_COL_WIDTH = 100;
 const STORAGE_URL = null;

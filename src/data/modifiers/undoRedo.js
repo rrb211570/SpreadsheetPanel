@@ -18,7 +18,6 @@ function undo() {
         if (enableTest) store.dispatch(trackEvent({ outcome: UNDO, timeTravelCounter: timeTravelCounter + 1 }));
         for (const [entryKey, data] of changeHistory[changeHistoryIndex - 1].getIndividualEntries()) {
             if (entryKey == 'table') {
-                console.log('table: ');
                 updateTableDimensions(data.getStyleMap());
             }
             else if (!/\.col\d+/.test(entryKey)) {
@@ -30,11 +29,9 @@ function undo() {
             }
         }
         for (const [group, styleMap] of changeHistory[changeHistoryIndex - 1].getGroupEntries()) {
-            console.log('group: ' + group);
             applyGroupChange(group, styleMap);
         }
         let updatedCollectedData = updateCollectedData(changeHistory[changeHistoryIndex - 1], collectedData);
-        console.log('Undo\nchangeHistoryIndex: ' + (changeHistoryIndex - 1));
         store.dispatch(undoAction({ collectedData: updatedCollectedData }));
     } else if (enableTest) store.dispatch(trackEvent({ outcome: UNDO }));
 }
@@ -63,7 +60,6 @@ function redo() {
             applyGroupChange(group, styleMap);
         }
         let updatedCollectedData = updateCollectedData(changeHistory[changeHistoryIndex + 1], collectedData);
-        console.log('Redo\nchangeHistoryIndex: ' + (changeHistoryIndex + 1));
         store.dispatch(redoAction({ collectedData: updatedCollectedData }));
     } else if (enableTest) store.dispatch(trackEvent({ outcome: REDO }));
 }

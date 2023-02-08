@@ -32,7 +32,9 @@ function TablePanel(props) {
 
         let timer = setInterval(() => {
             if (batchTurn.current == testSequence.get('TablePanel').turnNumber) {
-                unitTest(testSequence.get('TablePanel').tests, loadedSheet, rows, cols, rowHeight, colWidth);
+                let delay = setTimeout(()=>{
+                    unitTest(testSequence.get('TablePanel').tests, loadedSheet, rows, cols, rowHeight, colWidth);
+                },2000);
                 clearInterval(timer);
             }
         }, 500);

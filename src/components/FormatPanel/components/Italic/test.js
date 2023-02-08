@@ -9,7 +9,7 @@ const ACTION_TOGGLE_ITALIC = 2;
 const ASSERT = 3;
 
 function italicTest(turn) {
-    let changes = [[4, 5], [1, 2], [3, 7], [8, 2], [2, 4]];
+    let changes = [[4, 5], [6, 4], [7, 6], [3, 7], [6, 9], [5, 8], [8, 8]];
     try {
         if (changes.length > 0) checkReactionOfItalic(1, changes[0], turn, true, changes.length);
         for (let i = 1; i < changes.length; ++i) checkReactionOfItalic(i + 1, changes[i], turn, false, changes.length);

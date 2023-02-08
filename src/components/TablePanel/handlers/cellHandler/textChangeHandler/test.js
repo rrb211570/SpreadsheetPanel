@@ -7,7 +7,7 @@ const ARRANGE_AND_ACTION = 0;
 const ASSERT = 1;
 
 function textChangeTest(turn) {
-    let changes = [[4, 5, 'blah'], [1, 2, 'burger'], [3, 7, 'hello'], [8, 2, 'world'], [2, 4, 'apple']];
+    let changes = [[4, 5, 'blah'], [1, 2, 'burger'], [3, 2, 'banana'], [5, 1, 'helicopter'], [4, 3, 'orange'], [6, 3, 'truck'], [6, 4, 'zebra'], [7, 6, 'cat'], [3, 7, 'hello'], [6, 9, 'ink'], [1, 9, 'plane'], [2, 5, 'horse'], [5, 8, 'can'], [8, 8, 'pen'], [8, 2, 'world'], [2, 4, 'apple']];
     try {
         if (changes.length > 0) checkReactionOfTextChange(1, changes[0], turn, true, changes.length);
         for (let i = 1; i < changes.length; ++i) checkReactionOfTextChange(i + 1, changes[i], turn, false, changes.length);

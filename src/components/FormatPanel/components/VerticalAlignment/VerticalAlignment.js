@@ -39,19 +39,24 @@ function VerticalAlignment({ selectionEntries }) {
         }
     }
 
+    let handleChange = (e) => {
+        let newVerticalAlignment = e.target.id.match(/verticalAlignment__(.*)/)[1];
+        updateVerticalAlignment(selectionEntries, verticalAlignment, newVerticalAlignment);
+    }
+
     return (
         <div className='verticalAlignment' tabIndex='-1' onMouseEnter={recordMouseEnter} onMouseLeave={recordMouseLeave} onBlur={hideDropdown} >
             <button className='verticalAlignment__btn verticalAlignment__icon' onClick={toggleDropdown}>
                 <img src={`${verticalAlignment}.png`} alt={verticalAlignment + ' alignment'} />
             </button>
             <div className='verticalAlignment__options'>
-                <div id='verticalAlignment__top' className='verticalAlignment__icon' onClick={() => updateVerticalAlignment(selectionEntries, verticalAlignment, 'top')}>
+                <div id='verticalAlignment__top' className='verticalAlignment__icon' onClick={handleChange}>
                     <img src='top.png' alt='top alignment' />
                 </div>
-                <div id='verticalAlignment__center' className='verticalAlignment__icon' onClick={() => updateVerticalAlignment(selectionEntries, verticalAlignment, 'center')}>
+                <div id='verticalAlignment__center' className='verticalAlignment__icon' onClick={handleChange}>
                     <img src='center.png' alt='center vertical alignment' />
                 </div>
-                <div id='verticalAlignment__bottom' className='verticalAlignment__icon' onClick={() => updateVerticalAlignment(selectionEntries, verticalAlignment, 'bottom')}>
+                <div id='verticalAlignment__bottom' className='verticalAlignment__icon' onClick={handleChange}>
                     <img src='bottom.png' alt='bottom alignment' />
                 </div>
             </div>
@@ -80,6 +85,7 @@ let parseVerticalAlignment = (term) => {
         case 'bottom': return 'flex-end';
         default: break;
     }
+    return 'parseVerticalAlignment(): invalid term';
 }
 
 export { VerticalAlignment, updateVerticalAlignment, parseVerticalAlignment };

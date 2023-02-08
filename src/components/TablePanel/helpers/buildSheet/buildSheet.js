@@ -13,7 +13,6 @@ let table;
 let buildSheet = (loadedSheet, defaultRows, defaultCols, defaultHeight, defaultWidth) => {
     let [totalRows, totalCols] = loadRowsCols(loadedSheet, defaultRows, defaultCols);
     let tableData = assembleTableData(loadedSheet, totalRows, totalCols, defaultHeight, defaultWidth);
-    console.log(tableData);
     let rowWidth = getRowWidth(tableData);
 
     AxisX = constructAxisX(tableData, totalCols, defaultHeight, defaultWidth);

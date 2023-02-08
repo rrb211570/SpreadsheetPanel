@@ -10,14 +10,14 @@ const ACTION_CHANGE_VERTICAL_ALIGNMENT = 2;
 const ASSERT = 3;
 
 function verticalAlignmentTest(turn) {
-    let changes = [[4, 5, 'top'], [1, 2, 'center'], [3, 7, 'bottom'], [8, 2, 'top'], [2, 4, 'bottom']];
+    let changes = [[4, 5, 'top'], [1, 2, 'bottom'], [3, 7, 'bottom'], [8, 2, 'top'], [2, 4, 'bottom'], [5, 8, 'top'], [3, 2, 'bottom']];
     if (changes.length > 0) checkReactionOfVerticalAlignment(1, changes[0], turn, true, changes.length);
     for (let i = 1; i < changes.length; ++i) checkReactionOfVerticalAlignment(i + 1, changes[i], turn, false, changes.length);
 }
 
 function checkReactionOfVerticalAlignment(testCaseIndex, testDetails, turn, isFirstCall, totalTestCases) {
     let [selectedRowNum, selectedColNum, newVerticalAlignment] = testDetails;
-    let cellValue = document.querySelector(`.row${selectedRowNum}.col${selectedColNum}>.cellValueDiv>.cellValue`);
+    let cellValueDiv = document.querySelector(`.row${selectedRowNum}.col${selectedColNum}>.cellValueDiv`);
     let myTurnNumber = getInLine(turn);
     let stage = WAIT_IN_QUEUE;
     let prevVerticalAlignment;
@@ -35,7 +35,7 @@ function checkReactionOfVerticalAlignment(testCaseIndex, testDetails, turn, isFi
                 case ARRANGE:
                     let history = store.getState().history;
                     // arrange
-                    prevVerticalAlignment = cellValue.style.textAlign;
+                    prevVerticalAlignment = cellValueDiv.style.justifyContent == '' ? 'center' : cellValueDiv.style.justifyContent;
                     prevState = history.changeHistory[history.changeHistoryIndex];
                     prevHistoryIndex = history.changeHistoryIndex;
                 case ACTION_SELECT_CELL:
@@ -70,4 +70,4 @@ function checkReactionOfVerticalAlignment(testCaseIndex, testDetails, turn, isFi
     }, 200);
 }
 
-export {  verticalAlignmentTest, checkReactionOfVerticalAlignment };
+export { verticalAlignmentTest, checkReactionOfVerticalAlignment };

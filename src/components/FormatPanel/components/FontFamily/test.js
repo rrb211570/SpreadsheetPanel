@@ -10,7 +10,7 @@ const ACTION_CHANGE_FONT_FAMILY = 2;
 const ASSERT = 3;
 
 function fontFamilyTest(turn) {
-    let changes = [[4, 5, 'Times New Roman'], [1, 2, 'Ebrima'], [3, 7, 'Century Gothic'], [8, 2, 'Times New Roman'], [2, 4, 'Times New Roman']];
+    let changes = [[3, 2, 'Century Gothic'], [5, 1, 'Century Gothic'], [6, 9, 'Times New Roman'], [6, 4, 'Century Gothic'], [1, 9, 'Century Gothic'], [8, 8, 'Ebrima'], [4, 5, 'Times New Roman'], [1, 2, 'Ebrima'], [3, 7, 'Century Gothic'], [8, 2, 'Times New Roman'], [2, 4, 'Times New Roman']];
     if (changes.length > 0) checkReactionOfFontFamily(1, changes[0], turn, true, changes.length);
     for (let i = 1; i < changes.length; ++i) checkReactionOfFontFamily(i + 1, changes[i], turn, false, changes.length);
 }

@@ -1,6 +1,7 @@
 import { store } from './../../store/store.js'
 import { setTableDimensions } from '../../store/reducers/tableDimensionsSlice.js'
 import { updateScrollDimensions } from '../../components/TablePanel/handlers/scrollSnapHandler/scrollSnapHandler.js';
+import { parseVerticalAlignment } from '../../components/FormatPanel/components/VerticalAlignment/VerticalAlignment.js';
 
 function updateTableDimensions(styleMap) {
     let h = null;
@@ -61,16 +62,7 @@ function applyChange(entry, styleMap, val) {
                 entry.querySelector('.cellValue').style.textAlign = value;
                 break;
             case 'verticalAlignment':
-                let parsedValue = value;
-                switch (value) {
-                    case 'top':
-                        parsedValue = 'flex-start';
-                        break;
-                    case 'bottom':
-                        parsedValue = 'flex-end';
-                        break;
-                    default: break;
-                }
+                let parsedValue = parseVerticalAlignment(value);
                 entry.querySelector('.cellValueDiv').style.justifyContent = parsedValue;
                 break;
             case 'fontFamily':

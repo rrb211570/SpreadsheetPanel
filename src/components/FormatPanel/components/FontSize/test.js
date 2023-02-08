@@ -10,7 +10,7 @@ const ACTION_CHANGE_FONT_SIZE = 2;
 const ASSERT = 3;
 
 function fontSizeTest(turn) {
-    let changes = [[4, 5, 10], [1, 2, 14], [3, 7, 18], [8, 2, 24], [2, 4, 36]];
+    let changes = [[4, 5, 18], [1, 2, 24], [3, 7, 18], [8, 2, 24], [2, 4, 18], [5, 1, 36], [8, 8, 24]];
     if (changes.length > 0) checkReactionOfFontSize(1, changes[0], turn, true, changes.length);
     for (let i = 1; i < changes.length; ++i) checkReactionOfFontSize(i + 1, changes[i], turn, false, changes.length);
 }

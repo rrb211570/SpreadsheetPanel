@@ -11,7 +11,7 @@ const ACTION_CHANGE_BORDERS = 2;
 const ASSERT = 3;
 
 function bordersTest(turn) {
-    let changes = [[4, 5, 'top'], [1, 2, 'right'], [3, 7, 'bottom'], [8, 2, 'left'], [2, 4, 'top']];
+    let changes = [[4, 5, 'top'], [1, 2, 'right'], [3, 7, 'bottom'], [8, 2, 'left'], [2, 4, 'top'], [1, 6, 'left'], [5, 1, 'bottom'], [7, 6, 'left'], [6, 3, 'right'], [3, 7, 'top'], [1, 2, 'left'], [3, 7, 'none']];
     if (changes.length > 0) checkReactionOfBorders(1, changes[0], turn, true, changes.length);
     for (let i = 1; i < changes.length; ++i) checkReactionOfBorders(i + 1, changes[i], turn, false, changes.length);
 }
