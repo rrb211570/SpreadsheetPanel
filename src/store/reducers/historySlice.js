@@ -76,4 +76,5 @@ export const getChangeHistory = state => state.history.changeHistory;
 export const getChangeHistoryIndex = state => state.history.changeHistoryIndex;
 export const getCollectedData = state => state.history.collectedData;
 export const getSentData = state => state.history.sentData;
+
 export default historySlice.reducer;

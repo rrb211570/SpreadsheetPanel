@@ -1,5 +1,5 @@
 import Data from '../../../../../data/data.js';
-import recordChange from '../../../../../data/modifiers/recordChange.js';
+import { recordChange } from '../../../../../data/modifiers/recordChange.js';
 
 function applyTextChangeHandler(entryCell) {
     let changeOccurred = false;
@@ -8,34 +8,37 @@ function applyTextChangeHandler(entryCell) {
     const col = [...entryCell.classList].filter(name => /^col\d+$/.test(name))[0];
     let rowNum = parseInt(row.match(/(\d+)/)[0], 10);
     let colNum = parseInt(col.match(/(\d+)/)[0], 10);
-    let prevData = new Data();
-    let newData = new Data();
-    let uselessStyleMap = new Map();
+    let prevData;
+    let newData;
 
-    const onFocusHandler = function (e) {
-        prevData.setIndividualEntry('.' + row + '.' + col, uselessStyleMap, rowNum, colNum, input.value);
+    const onFocusHandler = (e) => {
+        prevData = createTextChangeData(rowNum, colNum, input.value);
         input.addEventListener('change', onChangeHandler);
         input.addEventListener('blur', onBlurHandler);
     }
 
-    const onChangeHandler = function (e) {
+    const onChangeHandler = (e) => {
         changeOccurred = true;
     }
 
-    const onBlurHandler = function (e) {
+    const onBlurHandler = (e) => {
         if (changeOccurred) {
             e.target.parentElement.querySelector('.cellValue').innerText = input.value;
-            newData.setIndividualEntry('.' + row + '.' + col, uselessStyleMap, rowNum, colNum, input.value);
+            newData = createTextChangeData(rowNum, colNum, input.value);
             recordChange(prevData, newData);
         }
         changeOccurred = false;
         input.removeEventListener('change', onChangeHandler);
         input.removeEventListener('blur', onBlurHandler);
-        prevData = new Data();
-        newData = new Data();
     }
 
     input.addEventListener('focus', onFocusHandler);
 }
 
-export default applyTextChangeHandler;
+function createTextChangeData(rowNum, colNum, value) {
+    let myData = new Data();
+    myData.setIndividualEntry('.row' + rowNum + '.col' + colNum, new Map(), rowNum, colNum, value);
+    return myData;
+}
+
+export { applyTextChangeHandler, createTextChangeData };

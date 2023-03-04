@@ -90,6 +90,7 @@ function MenuPanel() {
         }
         document.querySelector('#menuPanel__dropdown').style.opacity = 1;
         document.querySelector('#menuPanel__dropdown').style.zIndex = 3;
+        document.querySelector('#menuPanel__dropdown').style.height = 'auto';
         document.querySelector('#menuPanel__dropdown').style.left = marginLeftMap.get(arg) + 'px';
         document.querySelector('#menuPanel__dropdown').focus();
     }
@@ -97,8 +98,8 @@ function MenuPanel() {
     let hideDropdown = (e) => {
         document.querySelector('#menuPanel__dropdown').style.opacity = 0;
         document.querySelector('#menuPanel__dropdown').style.zIndex = -1;
+        document.querySelector('#menuPanel__dropdown').style.height = '0px';
     }
-
 
     return (
         <div id='menuPanel'>

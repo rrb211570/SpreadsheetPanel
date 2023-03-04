@@ -1,14 +1,14 @@
 import { batchTurn, nextTurn, concludeTestingBatch } from './../../../tests/sequenceHelpers.js'
-import { boldTest } from '../components/Bold/test.js';
-import { italicTest } from '../components/Italic/test.js';
-import { strikethroughTest } from '../components/Strikethrough/test.js';
-import { fontFamilyTest } from '../components/FontFamily/test.js';
-import { fontSizeTest } from '../components/FontSize/test.js';
-import { fontColorTest } from '../components/FontColor/test.js';
-import { cellColorTest } from '../components/CellColor/test.js';
-import { bordersTest } from '../components/Borders/test.js';
-import { horizontalAlignmentTest } from '../components/HorizontalAlignment/test.js';
-import { verticalAlignmentTest } from '../components/VerticalAlignment/test.js';
+import { boldTest } from '../components/Bold/boldTest.js';
+import { italicTest } from '../components/Italic/italicTest.js';
+import { strikethroughTest } from '../components/Strikethrough/strikethroughTest.js';
+import { fontFamilyTest } from '../components/FontFamily/fontFamilyTest.js';
+import { fontSizeTest } from '../components/FontSize/fontSizeTest.js';
+import { fontColorTest } from '../components/FontColor/fontColorTest.js';
+import { cellColorTest } from '../components/CellColor/cellColorTest.js';
+import { bordersTest } from '../components/Borders/bordersTest.js';
+import { horizontalAlignmentTest } from '../components/HorizontalAlignment/horizontalAlignmentTest.js';
+import { verticalAlignmentTest } from '../components/VerticalAlignment/verticalAlignmentTest.js';
 
 const t = {
     FONT_FAMILY: 'FONT_FAMILY',

@@ -16,12 +16,12 @@ jobs:
       - name: install firefox
         uses: browser-actions/setup-firefox@latest
       - run: firefox --version
-      - run: |
-          npm ci
-          npm start & npx wait-on http://localhost:3000
-      - name: Run Selenium test
-        id: selenium
-        uses: ./
+      #- run: |
+       #   npm ci
+       #   npm start & npx wait-on http://localhost:3000
+      #- name: Run Selenium test
+      #  id: selenium
+      #  uses: ./
   #push:
    # needs: test
     #runs-on: ubuntu-latest

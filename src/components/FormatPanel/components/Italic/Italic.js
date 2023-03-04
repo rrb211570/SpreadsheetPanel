@@ -3,7 +3,7 @@ import { store } from './../../../../store/store.js'
 import { useSelector } from 'react-redux';
 import { getFontStyle, setFontStyle } from '../../../../store/reducers/selectionSlice.js';
 import Data from "../../../../data/data.js";
-import recordChange from "../../../../data/modifiers/recordChange.js";
+import {recordChange} from "../../../../data/modifiers/recordChange.js";
 import './Italic.css'
 
 function Italic({ selectionEntries }) {

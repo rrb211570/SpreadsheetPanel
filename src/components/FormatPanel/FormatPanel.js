@@ -20,7 +20,7 @@ import { VerticalAlignment } from './components/VerticalAlignment/VerticalAlignm
 import './FormatPanel.css'
 
 let colors = [
-    ['white', 'black', '#334155', '#94a3b8', '#cbd5e1'],
+    ['#ffffff', '#000000', '#334155', '#94a3b8', '#cbd5e1'],
     ['#dc2626', '#991b1b', '#ef4444', '#f87171', '#fca5a5'],
     ['#f97316', '#c2410c', '#ea580c', '#fb923c', '#fdba74'],
     ['#fde047', '#a16207', '#ca8a04', '#facc15', '#fef08a'],

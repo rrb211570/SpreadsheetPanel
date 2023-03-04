@@ -3,7 +3,7 @@ import { store } from './../../../../store/store.js'
 import { useSelector } from 'react-redux';
 import { getCellColor, setCellColor } from '../../../../store/reducers/selectionSlice.js';
 import Data from "../../../../data/data.js";
-import recordChange from "../../../../data/modifiers/recordChange.js";
+import { recordChange } from "../../../../data/modifiers/recordChange.js";
 import './CellColor.css'
 import { hexToRgb } from "../../helper.js";
 
@@ -78,6 +78,7 @@ function CellColor({ selectionEntries, colors }) {
 }
 
 let updateCellColor = (selectionEntries, prevColor, newColor) => {
+    console.log(newColor);
     newColor = hexToRgb(newColor);
     let prevData = new Data();
     let newData = new Data();

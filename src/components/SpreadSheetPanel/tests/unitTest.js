@@ -1,4 +1,4 @@
-import { keyInputTest } from '../handlers/keyboardEvents/test.js';
+import { keyInputTest } from '../handlers/keyboardEvents/keyboardTest.js';
 
 import { batchTurn , nextTurn, concludeTestingBatch } from './../../../tests/sequenceHelpers.js'
 

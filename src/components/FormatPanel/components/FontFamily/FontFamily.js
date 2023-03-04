@@ -3,7 +3,7 @@ import { store } from './../../../../store/store.js'
 import { useSelector } from 'react-redux';
 import { getFontFamily, setFontFamily } from '../../../../store/reducers/selectionSlice.js';
 import Data from "../../../../data/data.js";
-import recordChange from "../../../../data/modifiers/recordChange.js";
+import {recordChange} from "../../../../data/modifiers/recordChange.js";
 import './FontFamily.css'
 
 let fonts = ['Calibri', 'Times New Roman', 'Ebrima', 'Century Gothic'];

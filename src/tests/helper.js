@@ -1,4 +1,4 @@
-import { store } from "../store/store";
+import { store } from "../store/store.js";
 
 function compareDOM(selectedRowNum, selectedColNum, propertyObj) {
     let cellValueDiv = document.querySelector(`.row${selectedRowNum}.col${selectedColNum}>.cellValueDiv`);

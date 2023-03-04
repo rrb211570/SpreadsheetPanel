@@ -1,4 +1,4 @@
-import applyTextChangeHandler from './textChangeHandler/textChangeHandler.js';
+import { applyTextChangeHandler } from './textChangeHandler/textChangeHandler.js';
 import { applySelectionHandler } from './selectionHandler/selectionHandler.js'
 
 function applyCellHandlers() {

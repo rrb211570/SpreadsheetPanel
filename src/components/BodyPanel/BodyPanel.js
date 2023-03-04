@@ -1,9 +1,9 @@
 import React from "react";
 import { Provider, connect } from 'react-redux'
 import { store, mapStateToProps, mapDispatchToProps } from './../../../src/store/store.js'
-import TitleInput from "./../../../src/components/TitleInput/TitleInput";
-import MenuPanel from "./../../../src/components/MenuPanel/MenuPanel";
-import SpreadSheetPanel from "./../../../src/components/SpreadSheetPanel/SpreadSheetPanel";
+import TitleInput from "./../../../src/components/TitleInput/TitleInput.js";
+import MenuPanel from "./../../../src/components/MenuPanel/MenuPanel.js";
+import SpreadSheetPanel from "./../../../src/components/SpreadSheetPanel/SpreadSheetPanel.js";
 import './BodyPanel.css'
 
 class MainPanel extends React.Component {

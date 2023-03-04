@@ -3,7 +3,7 @@ import { store } from './../../../../store/store.js'
 import { useSelector } from 'react-redux';
 import { getFontSize, setFontSize } from '../../../../store/reducers/selectionSlice.js';
 import Data from "../../../../data/data.js";
-import recordChange from "../../../../data/modifiers/recordChange.js";
+import {recordChange} from "../../../../data/modifiers/recordChange.js";
 import './FontSize.css'
 
 let fontSizes = [6, 7, 8, 9, 10, 11, 12, 14, 18, 24, 36];

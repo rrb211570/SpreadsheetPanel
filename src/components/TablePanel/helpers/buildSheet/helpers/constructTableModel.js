@@ -1,4 +1,4 @@
-import { getHeight, getWidth, getMarginLeft } from "./util";
+import { getHeight, getWidth, getMarginLeft } from "./util.js";
 
 function constructTableModel(tableData, rows, cols, rowWidth) {
     let keyIndex = 0;

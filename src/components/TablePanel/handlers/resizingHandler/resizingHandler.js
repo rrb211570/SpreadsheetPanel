@@ -1,6 +1,6 @@
 import Data from '../../../../data/data.js';
 import { hasClass } from '../../../../misc/util.js'
-import recordChange from '../../../../data/modifiers/recordChange.js';
+import {recordChange} from '../../../../data/modifiers/recordChange.js';
 import { store } from './../../../../store/store.js'
 import { setTableDimensions } from '../../../../store/reducers/tableDimensionsSlice.js'
 import { updateScrollDimensions } from '../scrollSnapHandler/scrollSnapHandler.js';

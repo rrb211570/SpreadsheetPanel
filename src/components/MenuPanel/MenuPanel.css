@@ -24,6 +24,7 @@
     flex-direction: column;
     opacity: 0;
     z-index: -1;
+    overflow: hidden;
 }
 
 .menuPanel__dropdownOption{

@@ -1,7 +1,7 @@
-import { resizersTests } from '../handlers/resizingHandler/test.js'
-import { selectionTest } from '../handlers/cellHandler/selectionHandler/test.js';
-import { textChangeTest } from '../handlers/cellHandler/textChangeHandler/test.js';
-import buildSheetTest from '../../TablePanel/helpers/buildSheet/test.js';
+import { resizersTests } from '../handlers/resizingHandler/resizingTest.js'
+import { selectionTest } from '../handlers/cellHandler/selectionHandler/selectionTest.js';
+import { textChangeTest } from '../handlers/cellHandler/textChangeHandler/textChangeTest.js';
+import buildSheetTest from '../helpers/buildSheet/buildSheetTest.js';
 
 import { batchTurn, nextTurn, concludeTestingBatch } from './../../../tests/sequenceHelpers.js'
 

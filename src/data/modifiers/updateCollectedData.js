@@ -1,7 +1,11 @@
+import { store } from '../../store/store.js';
 import Data from '../data.js';
 
-function updateCollectedData(dataAfterChange, prevCollectedData) {
+function updateCollectedData(dataAfterChange) {
+    let history = store.getState().history;
+    let prevCollectedData = history.collectedData;
     let updatedCollectedData = new Data();
+
     for (const [entryKey, data] of dataAfterChange.getIndividualEntries()) {
         let styleMap = new Map();
         if (prevCollectedData.hasIndividualEntry(entryKey)) {

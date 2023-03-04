@@ -1,7 +1,7 @@
-import { checkReactionOfResizing } from "../components/TablePanel/handlers/resizingHandler/test";
-import { checkReactionOfTextChange } from "../components/TablePanel/handlers/cellHandler/textChangeHandler/test";
-import { validateSequence, checkReactionOfKeyInput } from "../components/SpreadSheetPanel/handlers/keyboardEvents/test";
-import { checkReactionOfSingleClickSelection, checkReactionOfDoubleClickSelection } from "../components/TablePanel/handlers/cellHandler/selectionHandler/test";
+import { checkReactionOfResizing } from "../components/TablePanel/handlers/resizingHandler/resizingTest.js";
+import { checkReactionOfTextChange } from "../components/TablePanel/handlers/cellHandler/textChangeHandler/textChangeTest.js";
+import { validateSequence, checkReactionOfKeyInput } from "../components/SpreadSheetPanel/handlers/keyboardEvents/keyboardTest.js";
+import { checkReactionOfSingleClickSelection, checkReactionOfDoubleClickSelection } from "../components/TablePanel/handlers/cellHandler/selectionHandler/selectionTest.js";
 import { UNDO_DISPATCH, UNDO_FINISH, REDO_DISPATCH, REDO_FINISH, FLUFF_FULL } from './../components/SpreadSheetPanel/handlers/keyboardEvents/keyMacros.js'
 
 const X_AXIS = 'X_AXIS';

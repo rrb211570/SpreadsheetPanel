@@ -4,12 +4,15 @@ import { store } from '../../store/store.js'
 import { newHistoryState } from '../../store/reducers/historySlice.js'
 
 function recordChange(dataBeforeChange, dataAfterChange) {
-    let history = store.getState().history;
-    let prevRecordedData = updatePrevRecordedData(history.changeHistory[history.changeHistoryIndex], dataBeforeChange);
-    let updatedCollectedData = updateCollectedData(dataAfterChange, history.collectedData);
+    let prevRecordedData = updatePrevRecordedData(dataBeforeChange);
+    let updatedCollectedData = updateCollectedData(dataAfterChange);
     store.dispatch(newHistoryState({ prevRecordedData, dataAfterChange, collectedData: updatedCollectedData }));
 }
-function updatePrevRecordedData(prevData, dataBeforeChange) {
+
+function updatePrevRecordedData(dataBeforeChange) {
+    let history = store.getState().history;
+    let prevData = history.changeHistory[history.changeHistoryIndex];
+
     let updatedPrevData = new Data();
     for (const [entryKey, data] of dataBeforeChange.getIndividualEntries()) {
         let styleMap = new Map();
@@ -47,4 +50,4 @@ function updatePrevRecordedData(prevData, dataBeforeChange) {
     return updatedPrevData;
 }
 
-export default recordChange;
+export { recordChange, updatePrevRecordedData };
